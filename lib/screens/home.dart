@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';  // Importamos provider para acceder al ThemeProvider.
+
+import 'package:flutterapp/theme/theme_provider.dart'; // Importamos el archivo donde está el ThemeProvider.
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Accedemos al ThemeProvider para poder cambiar el tema.
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Mi App en Flutter"),
+        actions: [
+          IconButton(
+            icon: Icon(
+              themeProvider.themeMode == ThemeMode.dark
+                  ? Icons.wb_sunny  // Icono de sol si estamos en el tema oscuro.
+                  : Icons.nightlight_round,  // Icono de luna si estamos en el tema claro.
+            ),
+            onPressed: () {
+              // Cambiamos el tema cuando se presiona el botón.
+              themeProvider.toggleTheme();
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Column(
@@ -54,7 +76,6 @@ class Home extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-
             Column(
               children: [
                 ElevatedButton(
@@ -93,7 +114,21 @@ class Home extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            ),
+            // Este es el switch para cambiar el tema manualmente
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Tema oscuro"),
+                Switch(
+                  value: themeProvider.themeMode == ThemeMode.dark,
+                  onChanged: (value) {
+                    themeProvider.toggleTheme(); // Cambia el tema cuando se toca el switch.
+                  },
+                ),
+                Text("Tema claro"),
+              ],
+            ),
           ],
         ),
       ),
