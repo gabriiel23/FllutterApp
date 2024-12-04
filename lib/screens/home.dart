@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';  // Importamos provider para acceder al ThemeProvider.
+import 'package:provider/provider.dart'; // Importamos provider para acceder al ThemeProvider.
 
 import 'package:flutterapp/theme/theme_provider.dart'; // Importamos el archivo donde está el ThemeProvider.
 
@@ -13,13 +13,14 @@ class Home extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Mi App en Flutter"),
+        title: const Text("CanchAPP"),
         actions: [
           IconButton(
             icon: Icon(
               themeProvider.themeMode == ThemeMode.dark
-                  ? Icons.wb_sunny  // Icono de sol si estamos en el tema oscuro.
-                  : Icons.nightlight_round,  // Icono de luna si estamos en el tema claro.
+                  ? Icons.wb_sunny // Icono de sol si estamos en el tema oscuro.
+                  : Icons
+                      .nightlight_round, // Icono de luna si estamos en el tema claro.
             ),
             onPressed: () {
               // Cambiamos el tema cuando se presiona el botón.
@@ -37,22 +38,22 @@ class Home extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Mi App en Flutter",
+                  "CanchAPPP",
                   style: TextStyle(
-                    color: const Color.fromARGB(255, 232, 224, 202),
+                    color: const Color.fromARGB(255, 29, 84, 26),
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                     shadows: [
                       Shadow(
                         offset: Offset(2.0, 2.0),
                         blurRadius: 3.0,
-                        color: Colors.black,
+                        color: const Color.fromARGB(255, 128, 130, 127),
                       ),
                     ],
                   ),
                 ),
                 Text(
-                  "Hecha por mi mismo",
+                  "Sistema de reserva de canchas",
                   style: TextStyle(
                     color: const Color.fromARGB(255, 0, 0, 0),
                     fontSize: 16,
@@ -70,7 +71,7 @@ class Home extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(40.0),
               child: Image.asset(
-                'assets/casas.gif',
+                'assets/fubol.gif',
                 width: 280,
                 height: 280,
                 fit: BoxFit.cover,
@@ -85,13 +86,13 @@ class Home extends StatelessWidget {
                   child: Text(
                     "Segunda Página",
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w100,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 232, 224, 202),
+                    backgroundColor: const Color.fromARGB(255, 29, 84, 26),
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
                   ),
                 ),
@@ -103,13 +104,13 @@ class Home extends StatelessWidget {
                   child: Text(
                     "Tercera Página",
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w100,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 232, 224, 202),
+                    backgroundColor: const Color.fromARGB(255, 29, 84, 26),
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
                   ),
                 ),
@@ -119,14 +120,25 @@ class Home extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Tema oscuro"),
+                Text(
+                  "Tema oscuro",
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 29, 84, 26),
+                  ),
+                ),
                 Switch(
                   value: themeProvider.themeMode == ThemeMode.dark,
                   onChanged: (value) {
-                    themeProvider.toggleTheme(); // Cambia el tema cuando se toca el switch.
+                    themeProvider
+                        .toggleTheme(); // Cambia el tema cuando se toca el switch.
                   },
                 ),
-                Text("Tema claro"),
+                Text(
+                  "Tema claro",
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 29, 84, 26),
+                  ),
+                ),
               ],
             ),
           ],

@@ -15,7 +15,7 @@ class Second extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Niña en Columpio",
+                  "Proximo",
                   style: TextStyle(
                     color: const Color.fromARGB(255, 232, 224, 202),
                     fontSize: 40,
@@ -30,7 +30,7 @@ class Second extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Hecha por mi mismo",
+                  "Puede ir las canchas",
                   style: TextStyle(
                     color: const Color.fromARGB(255, 0, 0, 0),
                     fontSize: 16,

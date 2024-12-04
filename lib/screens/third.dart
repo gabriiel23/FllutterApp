@@ -23,7 +23,7 @@ class _ThirdState extends State<Third> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Soldado",
+                  "Proximo",
                   style: TextStyle(
                     color: const Color.fromARGB(255, 232, 224, 202),
                     fontSize: 60,
@@ -38,7 +38,7 @@ class _ThirdState extends State<Third> {
                   ),
                 ),
                 Text(
-                  "Hecha por mi mismo",
+                  "Puede ir un calendario",
                   style: TextStyle(
                     color: const Color.fromARGB(255, 0, 0, 0),
                     fontSize: 16,
