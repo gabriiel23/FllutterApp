@@ -8,14 +8,18 @@ class Third extends StatefulWidget {
 }
 
 class _ThirdState extends State<Third> {
-  // Definimos una variable de estado para contar las veces que el botón es presionado
-  int _counter = 0;
+  // Variables para gestionar el calendario
+  DateTime _selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Calendario de Reservas"),
+        backgroundColor: const Color.fromARGB(255, 29, 84, 26),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(54.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -23,91 +27,80 @@ class _ThirdState extends State<Third> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Proximo",
+                  "Selecciona una fecha",
                   style: TextStyle(
-                    color: const Color.fromARGB(255, 232, 224, 202),
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(2.0, 2.0), // Desplazamiento de la sombra
-                        blurRadius: 3.0, // Suavidad de la sombra
-                        color: Colors.black, // Color de la sombra
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  "Puede ir un calendario",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 16,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(2.0, 2.0), // Desplazamiento de la sombra
-                        blurRadius: 3.0, // Suavidad de la sombra
-                        color: const Color.fromARGB(
-                            255, 232, 224, 202), // Color de la sombra
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(40.0),
-              child: Image.asset(
-                'assets/soldado.gif',
-                width: 300,
-                height: 280,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _counter++; // Aumenta el contador cada vez que se presiona el botón
-                    });
-                  },
-                  child: Text(
-                    "Incrementar contador",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 232, 224, 202),
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16)),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'Contador: $_counter', // Muestra el valor del contador
-                  style: TextStyle(
+                    color: const Color.fromARGB(255, 29, 84, 26),
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/home");
-                  },
-                  child: Text(
-                    "Regresar",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                SizedBox(height: 8),
+                Text(
+                  "Elige un día para revisar o programar tus reservas.",
+                  style: TextStyle(
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 16,
                   ),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 232, 224, 202),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 16)),
                 ),
               ],
+            ),
+            // Widget interactivo para seleccionar fecha
+            Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: _selectedDate,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(DateTime.now().year + 1),
+                    );
+                    if (pickedDate != null && pickedDate != _selectedDate) {
+                      setState(() {
+                        _selectedDate = pickedDate;
+                      });
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 29, 84, 26),
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+                  ),
+                  child: Text(
+                    "Seleccionar Fecha",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16),
+                Text(
+                  "Fecha seleccionada: ${_selectedDate.toLocal()}".split(' ')[0],
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 29, 84, 26),
+                  ),
+                ),
+              ],
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, "/home");
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 29, 84, 26),
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+              ),
+              child: Text(
+                "Regresar al Inicio",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),

@@ -6,8 +6,12 @@ class Second extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Tus Reservas"),
+        backgroundColor: const Color.fromARGB(255, 29, 84, 26),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(40.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -15,71 +19,90 @@ class Second extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Proximo",
+                  "Resumen de Reservas",
                   style: TextStyle(
-                    color: const Color.fromARGB(255, 232, 224, 202),
-                    fontSize: 40,
+                    color: const Color.fromARGB(255, 29, 84, 26),
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(2.0, 2.0), // Desplazamiento de la sombra
-                        blurRadius: 3.0, // Suavidad de la sombra
-                        color: Colors.black, // Color de la sombra
-                      ),
-                    ],
                   ),
                 ),
+                SizedBox(height: 8),
                 Text(
-                  "Puede ir las canchas",
+                  "Consulta y administra tus reservas de manera rápida y sencilla.",
                   style: TextStyle(
                     color: const Color.fromARGB(255, 0, 0, 0),
                     fontSize: 16,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(2.0, 2.0), // Desplazamiento de la sombra
-                        blurRadius: 3.0, // Suavidad de la sombra
-                        color: const Color.fromARGB(
-                            255, 232, 224, 202), // Color de la sombra
-                      ),
-                    ],
                   ),
-                )
+                ),
               ],
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(
-                  40.0), // Ajusta el valor para el redondeo deseado
-              child: Image.asset(
-                'assets/columpio.gif',
-                width: 280, // Opcional: Ajusta el ancho de la imagen
-                height: 280, // Opcional: Ajusta la altura de la imagen
-                fit: BoxFit
-                    .cover, // Opcional: Ajusta cómo se ajusta la imagen al contenedor
-              ),
             ),
             Column(
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/home");
-                  },
-                  child: Text(
-                    "Regresar",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 232, 224, 202),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 50, vertical: 16)),
-                )
+                DataTable(
+                  columns: const [
+                    DataColumn(
+                      label: Text(
+                        'Fecha',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 29, 84, 26),
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Hora',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 29, 84, 26),
+                        ),
+                      ),
+                    ),
+                    DataColumn(
+                      label: Text(
+                        'Espacio',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 29, 84, 26),
+                        ),
+                      ),
+                    ),
+                  ],
+                  rows: [
+                    DataRow(cells: [
+                      DataCell(Text('12/12/2024')),
+                      DataCell(Text('10:00 AM')),
+                      DataCell(Text('Cancha 1')),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('13/12/2024')),
+                      DataCell(Text('4:00 PM')),
+                      DataCell(Text('Cancha 2')),
+                    ]),
+                  ],
+                ),
               ],
-            )
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, "/home");
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 29, 84, 26),
+                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
+              ),
+              child: Text(
+                "Regresar al Inicio",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ],
         ),
-      ), // Scaffold
-    ); // MaterialApp
+      ),
+    );
   }
 }

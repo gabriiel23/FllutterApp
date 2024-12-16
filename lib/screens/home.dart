@@ -3,8 +3,29 @@ import 'package:provider/provider.dart'; // Importamos provider para acceder al 
 
 import 'package:flutterapp/theme/theme_provider.dart'; // Importamos el archivo donde está el ThemeProvider.
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  int _currentIndex = 0; // Índice para la página actual.
+
+  final List<String> _routes = [
+    '/second', // Ruta de la segunda página.
+    '/third',  // Ruta de la tercera página.
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+
+    // Navegamos a la página correspondiente.
+    Navigator.pushReplacementNamed(context, _routes[index]);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,45 +98,6 @@ class Home extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, "/second");
-                  },
-                  child: Text(
-                    "Segunda Página",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 29, 84, 26),
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
-                  ),
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, "/third");
-                  },
-                  child: Text(
-                    "Tercera Página",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w100,
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 29, 84, 26),
-                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 16),
-                  ),
-                ),
-              ],
-            ),
             // Este es el switch para cambiar el tema manualmente
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -143,6 +125,22 @@ class Home extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onItemTapped,
+        selectedItemColor: const Color.fromARGB(255, 29, 84, 26),
+        unselectedItemColor: const Color.fromARGB(255, 128, 130, 127),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sports_soccer), // Ícono relacionado con deportes
+            label: 'Reservas',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today), // Ícono para un calendario
+            label: 'Calendario',
+          ),
+        ],
       ),
     );
   }
