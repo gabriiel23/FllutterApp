@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Importamos provider para acceder al ThemeProvider.
-
-import 'package:flutterapp/theme/theme_provider.dart'; // Importamos el archivo donde está el ThemeProvider.
+import 'package:flutterapp/presentation/routes/routes.dart';
+import 'package:provider/provider.dart';
+import 'package:flutterapp/theme/theme_provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,25 +11,24 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _currentIndex = 0; // Índice para la página actual.
+  int _currentIndex = 0;
 
   final List<String> _routes = [
-    '/second', // Ruta de la segunda página.
-    '/third',  // Ruta de la tercera página.
+    Routes.home, // Home
+    Routes.locals, // Locales
+    Routes.reserve, // Reservas
+    Routes.events, // Eventos
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
-
-    // Navegamos a la página correspondiente.
     Navigator.pushReplacementNamed(context, _routes[index]);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Accedemos al ThemeProvider para poder cambiar el tema.
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
@@ -37,91 +36,195 @@ class _HomeState extends State<Home> {
         title: const Text("CanchAPP"),
         actions: [
           IconButton(
-            icon: Icon(
-              themeProvider.themeMode == ThemeMode.dark
-                  ? Icons.wb_sunny // Icono de sol si estamos en el tema oscuro.
-                  : Icons
-                      .nightlight_round, // Icono de luna si estamos en el tema claro.
-            ),
+            icon: const Icon(Icons.search),
             onPressed: () {
-              // Cambiamos el tema cuando se presiona el botón.
-              themeProvider.toggleTheme();
+              print("Buscar");
+            },
+          ),
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              switch (value) {
+                case 'Perfil':
+                  Navigator.pushNamed(context, Routes.profile);
+                  break;
+                case 'Login':
+                  Navigator.pushNamed(context, Routes.login);
+                  break;
+                case 'Configuración':
+                  Navigator.pushNamed(context, Routes.settings);
+                  break;
+                case 'Registro':
+                  Navigator.pushNamed(context, Routes.registration);
+                  break;
+                case 'Cerrar sesión':
+                  Navigator.pushReplacementNamed(context, Routes.logout);
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return {'Perfil', 'Login', 'Configuración', 'Registro', 'Cerrar sesión'}
+                  .map((String choice) {
+                return PopupMenuItem<String>(
+                  value: choice,
+                  child: Text(choice),
+                );
+              }).toList();
             },
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(32.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "CanchAPPP",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 29, 84, 26),
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 3.0,
-                        color: const Color.fromARGB(255, 128, 130, 127),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  "Sistema de reserva de canchas",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    fontSize: 16,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(2.0, 2.0),
-                        blurRadius: 3.0,
-                        color: const Color.fromARGB(255, 232, 224, 202),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(40.0),
+            // Título principal (comentado para posible uso futuro)
+            /*const Text(
+              "Bienvenido a CanchAPP",
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+              textAlign: TextAlign.center,
+            ),*/
+            const SizedBox(height: 20),
+            // Imagen destacada (comentado para posible uso futuro)
+            /*ClipRRect(
+              borderRadius: BorderRadius.circular(20),
               child: Image.asset(
                 'assets/fubol.gif',
-                width: 280,
-                height: 280,
+                width: double.infinity,
+                height: 200,
                 fit: BoxFit.cover,
               ),
+            ),*/
+            const SizedBox(height: 20),
+            // Carrusel de publicidad
+            const Text(
+              "Propaganda",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            // Este es el switch para cambiar el tema manualmente
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 150,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  Card(
+                    child: Container(
+                      width: 200,
+                      child: Image.network(
+                        'https://via.placeholder.com/200x150',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Container(
+                      width: 200,
+                      child: Image.network(
+                        'https://via.placeholder.com/200x150',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Container(
+                      width: 200,
+                      child: Image.network(
+                        'https://via.placeholder.com/200x150',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Promociones y ofertas
+            const Text(
+              "Promociones y Ofertas",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
               children: [
-                Text(
-                  "Tema oscuro",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 29, 84, 26),
+                Card(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Image.network(
+                          'https://via.placeholder.com/150',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          "20% de descuento",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Switch(
-                  value: themeProvider.themeMode == ThemeMode.dark,
-                  onChanged: (value) {
-                    themeProvider
-                        .toggleTheme(); // Cambia el tema cuando se toca el switch.
-                  },
-                ),
-                Text(
-                  "Tema claro",
-                  style: TextStyle(
-                    color: const Color.fromARGB(255, 29, 84, 26),
+                Card(
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Image.network(
+                          'https://via.placeholder.com/150',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          "Promoción 2x1",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 20),
+            // Opiniones de Usuarios
+            const Text(
+              "Opiniones de Usuarios",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.green.shade100,
+                child: const Icon(Icons.person, color: Colors.green),
+              ),
+              title: const Text("Juan Pérez"),
+              subtitle: const Text("Excelente servicio, rápido y confiable."),
+            ),
+            ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.blue.shade100,
+                child: const Icon(Icons.person, color: Colors.blue),
+              ),
+              title: const Text("Ana Gómez"),
+              subtitle: const Text("Reservar canchas nunca fue tan fácil."),
             ),
           ],
         ),
@@ -129,16 +232,24 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
-        selectedItemColor: const Color.fromARGB(255, 29, 84, 26),
-        unselectedItemColor: const Color.fromARGB(255, 128, 130, 127),
+        selectedItemColor: Colors.green.shade800,
+        unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.sports_soccer), // Ícono relacionado con deportes
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.location_on),
+            label: 'Locales',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.sports_soccer),
             label: 'Reservas',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today), // Ícono para un calendario
-            label: 'Calendario',
+            icon: Icon(Icons.event),
+            label: 'Eventos',
           ),
         ],
       ),
