@@ -7,8 +7,8 @@ import 'package:flutterapp/presentation/registration_page.dart';
 import 'package:flutterapp/presentation/settings_page.dart';
 import 'package:flutterapp/presentation/splash_page.dart';
 import 'package:flutterapp/screens/home.dart';
-import 'package:flutterapp/screens/second.dart';
-import 'package:flutterapp/screens/third.dart';
+//import 'package:flutterapp/screens/second.dart';
+//import 'package:flutterapp/screens/third.dart';
 
 import 'routes.dart';
 
@@ -46,10 +46,10 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.home: (_) => const Home(),
 
     // Ruta para la página de eventos
-    Routes.events: (_) => const Second(),
+    Routes.events: (_) => const Home(),
 
     // Ruta para la página de reservas
-    Routes.reserve: (_) => const Third(),
+    Routes.reserve: (_) => const Home(),
 
     // Ruta para la página de locales
     Routes.locals: (_) => LocalesPage(),
