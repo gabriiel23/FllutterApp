@@ -70,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 ScaleTransition(
                   scale: _animation, // Escala proporcional al progreso de la animación
                   child: Icon(
-                    Icons.sports_soccer, // Ícono representativo
+                    Icons.sports_score_rounded, // Ícono representativo
                     size: 100, // Tamaño del ícono
                     color: Colors.white, // Color del ícono
                   ),

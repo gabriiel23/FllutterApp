@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/presentation/fragments/custom_navigation.dart';
+import 'package:flutterapp/presentation/routes/routes.dart';
 
 class LocalesPage extends StatelessWidget {
   final List<Map<String, dynamic>> locales = [
@@ -138,6 +140,25 @@ class LocalesPage extends StatelessWidget {
               ],
             ),
           );
+        },
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: 1, // Índice de la página actual
+        onTap: (index) {
+          // Navegar según el índice
+          switch (index) {
+            case 0:
+              Navigator.pushReplacementNamed(context, Routes.home);
+              break;
+            case 1:
+              break; // Ya estamos en Locales
+            case 2:
+              Navigator.pushReplacementNamed(context, Routes.reserve);
+              break;
+            case 3:
+              Navigator.pushReplacementNamed(context, Routes.events);
+              break;
+          }
         },
       ),
     );
