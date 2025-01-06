@@ -24,12 +24,12 @@ class _HomeState extends State<Home> {
     setState(() {
       _currentIndex = index;
     });
-    Navigator.pushReplacementNamed(context, _routes[index]);
+    Navigator.pushNamed(context, _routes[index]);
   }
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
+    // final themeProvider = Provider.of<ThemeProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
