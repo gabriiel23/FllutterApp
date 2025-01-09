@@ -51,8 +51,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.blue.shade800.withOpacity(_animation.value), // Ajusta la opacidad dinámicamente
-                      Colors.blue.shade300, // Color de fondo complementario
+                      const Color(0xFF19382F).withOpacity(_animation.value), // Ajusta la opacidad dinámicamente
+                      const Color.fromARGB(255, 34, 68, 58) // Color de fondo complementario
                     ],
                     begin: Alignment.topLeft, // Dirección del degradado
                     end: Alignment.bottomRight,
@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   scale: _animation, // Escala proporcional al progreso de la animación
                   child: Icon(
                     Icons.sports_soccer, // Ícono representativo
-                    size: 100, // Tamaño del ícono
+                    size: 140, // Tamaño del ícono
                     color: Colors.white, // Color del ícono
                   ),
                 ),
@@ -80,9 +80,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 FadeTransition(
                   opacity: _animation, // Opacidad vinculada a la animación
                   child: Text(
-                    'Canchas UIDE', // Título de la aplicación
-                    style: GoogleFonts.lato( // Fuente personalizada con Google Fonts
-                      fontSize: 28, 
+                    'CanchAPP', // Título de la aplicación
+                    style: GoogleFonts.sansita( // Fuente personalizada con Google Fonts
+                      fontSize: 56, 
                       fontWeight: FontWeight.bold, 
                       color: Colors.white,
                     ),
@@ -93,9 +93,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 FadeTransition(
                   opacity: _animation,
                   child: Text(
-                    'Actívate, vive saludable', // Lema de la aplicación
-                    style: GoogleFonts.lato(
-                      fontSize: 16,
+                    'Haz deporte bro, no seas vagoneta', // Lema de la aplicación
+                    style: GoogleFonts.sansita(
+                      fontSize: 18,
                       fontStyle: FontStyle.italic,
                       color: Colors.white70, // Color más tenue para el subtítulo
                     ),

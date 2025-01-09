@@ -1,17 +1,22 @@
 class Routes {
-  // constructor privado
+  // Constructor privado
   Routes._();
 
+  // Ruta inicial
   static const initialRoute = splash;
 
+  // Rutas principales (con BottomNavigationBar)
+  static const home = '/home';
+  static const cancha = '/cancha';
+  static const profile = '/profile';
+  static const reserves = '/reserves';
+
+  // Rutas secundarias (sin BottomNavigationBar)
   static const splash = '/splash';
   static const login = '/login';
   static const logout = '/logout';
-  static const registration = 'registration'; 
-  static const profile = '/profile';
+  static const registration = '/registration';
   static const settings = '/settings';
-  static const home = '/home';
-  static const events = '/second';
-  static const reserve = '/third';
   static const locals = '/locals';
+  static const events = '/events';
 }

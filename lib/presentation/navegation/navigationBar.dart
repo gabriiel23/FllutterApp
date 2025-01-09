@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'screens.dart';
+import 'package:flutterapp/presentation/home_page.dart';
+import 'package:flutterapp/presentation/canchas_page.dart';
+import 'package:flutterapp/presentation/reserves_page.dart';
+import 'package:flutterapp/presentation/profile_page.dart';
+
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -13,9 +17,9 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     const Home(),
-    const Cancha(),
-    const Calendar(),
+    const Canchas(),
     const Reserves(),
+    const ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -32,22 +36,22 @@ class _MainScreenState extends State<MainScreen> {
         children: _pages,
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.black, // Fondo negro
+        color: const Color(0xFF19382F),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0), // Espaciado vertical
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(4, (index) {
               final icons = [
                 Icons.home,
-                Icons.shopping_cart,
-                Icons.favorite,
+                Icons.location_on,
+                Icons.history,
                 Icons.person,
               ];
               return IconButton(
                 icon: Icon(
                   icons[index],
-                  size: 26, // Tamaño del ícono
+                  size: 26,
                   color: _currentIndex == index ? Colors.white : Colors.grey,
                 ),
                 onPressed: () => _onItemTapped(index),

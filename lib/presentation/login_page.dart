@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutterapp/presentation/routes/routes.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,8 +24,8 @@ class _LoginPageState extends State<LoginPage> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.blue.shade800,
-                  Colors.blue.shade400,
+                  const Color(0xFF19382F),
+                  const Color.fromARGB(255, 41, 92, 78),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -50,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                   // Título
                   Text(
                     'Inicia Sesión',
-                    style: TextStyle(
+                    style: GoogleFonts.sansita(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -72,12 +74,13 @@ class _LoginPageState extends State<LoginPage> {
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Correo electrónico',
-                      prefixIcon: const Icon(Icons.email, color: Colors.blue),
+                      prefixIcon: const Icon(Icons.email, color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    style: GoogleFonts.sansita(),
                   ),
                   const SizedBox(height: 20),
                   // Campo de contraseña
@@ -88,13 +91,13 @@ class _LoginPageState extends State<LoginPage> {
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Contraseña',
-                      prefixIcon: const Icon(Icons.lock, color: Colors.blue),
+                      prefixIcon: const Icon(Icons.lock, color: Colors.black),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isPasswordVisible
                               ? Icons.visibility
                               : Icons.visibility_off,
-                          color: Colors.blue,
+                          color: Colors.black,
                         ),
                         onPressed: () {
                           setState(() {
@@ -107,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderSide: BorderSide.none,
                       ),
                     ),
+                    style: GoogleFonts.sansita(),
                   ),
                   const SizedBox(height: 40),
                   // Botón de inicio de sesión
@@ -118,16 +122,16 @@ class _LoginPageState extends State<LoginPage> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 40,
-                        vertical: 12,
+                        vertical: 16,
                       ),
-                      backgroundColor: Colors.blue.shade900,
+                      backgroundColor: const Color(0xFF19382F),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Iniciar Sesión',
-                      style: TextStyle(
+                      style: GoogleFonts.sansita(
                         fontSize: 18,
                         color: Colors.white,
                       ),
@@ -137,16 +141,28 @@ class _LoginPageState extends State<LoginPage> {
                   // Opción de registro
                   GestureDetector(
                     onTap: () {
-                      print('Navegar a registro');
+                      // Navegar a la ruta de registro
+                      Navigator.pushNamed(context, Routes.registration);
                     },
-                    child: Text(
-                      '¿No tienes cuenta? Regístrate',
-                      style: TextStyle(
-                        color: Colors.white,
-                        decoration: TextDecoration.underline,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min, // Esto ajusta el tamaño del Row al contenido
+                      children: [
+                        Text(
+                          '¿No tienes cuenta?  ',
+                          style: GoogleFonts.sansita(
+                            color: Colors.white,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        Text(
+                          'Registrate',
+                          style: GoogleFonts.sansita(
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                  )
                 ],
               ),
             ),

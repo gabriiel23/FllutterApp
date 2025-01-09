@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:flutterapp/presentation/routes/routes.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -24,8 +26,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.blue.shade800,
-                  Colors.blue.shade400,
+                  const Color(0xFF19382F),
+                  const Color.fromARGB(255, 41, 92, 78),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -43,7 +45,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   Text(
                     'Regístrate',
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 50,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                       shadows: [
@@ -63,7 +65,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Nombre completo',
-                      prefixIcon: const Icon(Icons.person, color: Colors.blue),
+                      prefixIcon: const Icon(Icons.person, color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
@@ -79,7 +81,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Correo electrónico',
-                      prefixIcon: const Icon(Icons.email, color: Colors.blue),
+                      prefixIcon: const Icon(Icons.email, color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
@@ -95,13 +97,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Contraseña',
-                      prefixIcon: const Icon(Icons.lock, color: Colors.blue),
+                      prefixIcon: const Icon(Icons.lock, color: Colors.black),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isPasswordVisible
                               ? Icons.visibility
                               : Icons.visibility_off,
-                          color: Colors.blue,
+                          color: Colors.black,
                         ),
                         onPressed: () {
                           setState(() {
@@ -124,7 +126,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Confirmar contraseña',
-                      prefixIcon: const Icon(Icons.lock_outline, color: Colors.blue),
+                      prefixIcon: const Icon(Icons.lock_outline, color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
@@ -141,9 +143,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 40,
-                        vertical: 12,
+                        vertical: 16,
                       ),
-                      backgroundColor: Colors.blue.shade900,
+                      backgroundColor: const Color(0xFF19382F),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
@@ -160,16 +162,28 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   // Opción para volver al inicio de sesión
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context); // Navega de regreso a la pantalla anterior
+                      // Navegar a la ruta de registro
+                      Navigator.pop(context, Routes.login);
                     },
-                    child: Text(
-                      '¿Ya tienes una cuenta? Inicia sesión',
-                      style: TextStyle(
-                        color: Colors.white,
-                        decoration: TextDecoration.underline,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min, // Esto ajusta el tamaño del Row al contenido
+                      children: [
+                        Text(
+                          '¿Ya tienes una cuenta?  ',
+                          style: GoogleFonts.sansita(
+                            color: Colors.white,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        Text(
+                          'Inicia Sesión',
+                          style: GoogleFonts.sansita(
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                  )
                 ],
               ),
             ),
