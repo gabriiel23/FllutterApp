@@ -64,7 +64,7 @@ class ProfilePage extends StatelessWidget {
             CircleAvatar(
               radius: 60,
               backgroundImage: NetworkImage(
-                'https://i.pinimg.com/564x/9d/6b/9d/9d6b9db2dcb0526a09b89fb35d075c72.jpg', // URL de imagen falsa
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMSGTtrTDtuCpVMqlcS8XLV61ORiQmOSCJUQ&s', // URL de imagen falsa
               ),
             ),
             const SizedBox(height: 20),

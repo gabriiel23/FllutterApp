@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/presentation/groups_page.dart';
 import 'package:flutterapp/presentation/home_page.dart';
 import 'package:flutterapp/presentation/canchas_page.dart';
 import 'package:flutterapp/presentation/reserves_page.dart';
 import 'package:flutterapp/presentation/profile_page.dart';
+
 
 
 class MainScreen extends StatefulWidget {
@@ -16,10 +18,11 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const Home(),
-    const Canchas(),
-    const Reserves(),
-    const ProfilePage(),
+    Home(),
+    Canchas(),
+    Groups(),
+    Reserves(),
+    ProfilePage(),
   ];
 
   void _onItemTapped(int index) {
@@ -41,12 +44,13 @@ class _MainScreenState extends State<MainScreen> {
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(4, (index) {
+            children: List.generate(5, (index) {
               final icons = [
                 Icons.home,
                 Icons.location_on,
-                Icons.history,
-                Icons.person,
+                Icons.group,
+                Icons.history_outlined,
+                Icons.person_pin,
               ];
               return IconButton(
                 icon: Icon(

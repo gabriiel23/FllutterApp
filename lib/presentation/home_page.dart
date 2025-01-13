@@ -13,8 +13,7 @@ class _HomeState extends State<Home> {
   int _currentIndex = 0;
 
   final List<String> _routes = [
-    Routes.home, // Home
-    Routes.locals, // Locales
+    Routes.home, // Home 
     Routes.reserves, // Reservas
     Routes.events, // Eventos
   ];
@@ -117,9 +116,6 @@ class _HomeState extends State<Home> {
                             case 'Registro':
                               Navigator.pushNamed(context, Routes.registration);
                               break;
-                            case 'Locales':
-                              Navigator.pushNamed(context, Routes.locals);
-                              break;
                             case 'Configuración':
                               Navigator.pushNamed(context, Routes.settings);
                               break;
@@ -129,7 +125,7 @@ class _HomeState extends State<Home> {
                           }
                         },
                         itemBuilder: (BuildContext context) {
-                          return {'Login', 'Registro', 'Locales', 'Configuración', 'Cerrar sesión'}
+                          return {'Login', 'Registro', 'Configuración', 'Cerrar sesión'}
                               .map((String choice) {
                             return PopupMenuItem<String>(
                               value: choice,

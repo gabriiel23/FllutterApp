@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -11,17 +12,21 @@ class SettingsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Configuración'),
-        backgroundColor: Colors.blue.shade700,
+        title: Text(
+          'Configuración',
+          style: GoogleFonts.sansita(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF19382F),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Ajustes Generales',
-              style: TextStyle(
+              style: GoogleFonts.sansita(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -32,13 +37,17 @@ class SettingsPage extends StatelessWidget {
                 themeProvider.themeMode == ThemeMode.dark
                     ? Icons.dark_mode
                     : Icons.light_mode,
-                color: Colors.blue.shade700,
+                color: const Color(0xFF19382F),
               ),
-              title: const Text('Tema'),
+              title: Text(
+                'Tema',
+                style: GoogleFonts.sansita(),
+              ),
               subtitle: Text(
                 themeProvider.themeMode == ThemeMode.dark
                     ? 'Oscuro'
                     : 'Claro',
+                style: GoogleFonts.sansita(),
               ),
               trailing: Switch(
                 value: themeProvider.themeMode == ThemeMode.dark,
@@ -49,9 +58,18 @@ class SettingsPage extends StatelessWidget {
             ),
             const Divider(),
             ListTile(
-              leading: Icon(Icons.notifications, color: Colors.blue.shade700),
-              title: const Text('Notificaciones'),
-              subtitle: const Text('Personaliza las notificaciones'),
+              leading: Icon(
+                Icons.notifications,
+                color: const Color(0xFF19382F),
+              ),
+              title: Text(
+                'Notificaciones',
+                style: GoogleFonts.sansita(),
+              ),
+              subtitle: Text(
+                'Personaliza las notificaciones',
+                style: GoogleFonts.sansita(),
+              ),
               onTap: () {
                 // Acción al pulsar
                 print('Abrir configuraciones de notificaciones');
@@ -59,9 +77,18 @@ class SettingsPage extends StatelessWidget {
             ),
             const Divider(),
             ListTile(
-              leading: Icon(Icons.language, color: Colors.blue.shade700),
-              title: const Text('Idioma'),
-              subtitle: const Text('Selecciona el idioma preferido'),
+              leading: Icon(
+                Icons.language,
+                color: const Color(0xFF19382F),
+              ),
+              title: Text(
+                'Idioma',
+                style: GoogleFonts.sansita(),
+              ),
+              subtitle: Text(
+                'Selecciona el idioma preferido',
+                style: GoogleFonts.sansita(),
+              ),
               onTap: () {
                 // Acción al pulsar
                 print('Abrir configuraciones de idioma');

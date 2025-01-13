@@ -1,3 +1,4 @@
+
 class Routes {
   // Constructor privado
   Routes._();
@@ -19,4 +20,7 @@ class Routes {
   static const settings = '/settings';
   static const locals = '/locals';
   static const events = '/events';
+  static const groups = '/groups';
+  static const newGroupPage = '/newGroup';
+  static const canchas = '/cachas';
 }
