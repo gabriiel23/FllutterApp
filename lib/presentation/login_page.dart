@@ -14,6 +14,36 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
+  // Usuario temporal predefinido
+  final String tempEmail = "messi@gmail.com";
+  final String tempPassword = "12345";
+
+  void _login() {
+    // Compara el correo y la contraseña con el usuario temporal
+    if (_emailController.text == tempEmail && _passwordController.text == tempPassword) {
+      print('Iniciando sesión como usuario temporal');
+      Navigator.pushNamed(context, Routes.home); // Redirige al home
+    } else {
+      // Si no coincide, muestra un mensaje de error
+      print('Credenciales incorrectas');
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('El correo o la contraseña son incorrectos.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cerrar'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,10 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 40),
                   // Botón de inicio de sesión
                   ElevatedButton(
-                    onPressed: () {
-                      // Acción de inicio de sesión
-                      print('Iniciando sesión con: ${_emailController.text}');
-                    },
+                    onPressed: _login, // Llama a la función de login
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 40,

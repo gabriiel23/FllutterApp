@@ -1,4 +1,6 @@
 
+import 'package:flutterapp/presentation/payment_page.dart';
+
 class Routes {
   // Constructor privado
   Routes._();
@@ -23,4 +25,6 @@ class Routes {
   static const groups = '/groups';
   static const newGroupPage = '/newGroup';
   static const canchas = '/cachas';
+  static const newReservePage = '/newReserve';
+  static const payment = '/payment';
 }

@@ -15,13 +15,28 @@ class Groups extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: const Color(0xFF19382F),
-          title: Text(
-            "Consulta jugadores y grupos",
-            style: GoogleFonts.sansita(
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment
+                .start, // Mantiene el título alineado a la izquierda
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 8.0), // Espaciado vertical del título
+                child: Text(
+                  "Comunidad",
+                  style: GoogleFonts.sansita(
+                    fontSize: 24,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Divider(
+                color: Colors.grey[300],
+                height: 1.0,
+                thickness: 1.0,
+              ),
+            ],
           ),
           bottom: const TabBar(
             tabs: [
@@ -34,10 +49,10 @@ class Groups extends StatelessWidget {
                 text: "Grupos",
               ),
             ],
-            labelColor: Colors.white, // Color del texto para la pestaña seleccionada
-            unselectedLabelColor: Colors.grey, // Color del texto para las pestañas no seleccionadas
-            labelStyle: TextStyle(fontSize: 16), // Estilo para la pestaña seleccionada
-            unselectedLabelStyle: TextStyle(fontSize: 14), // Estilo para pestañas no seleccionadas
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey,
+            labelStyle: TextStyle(fontSize: 16),
+            unselectedLabelStyle: TextStyle(fontSize: 14),
           ),
         ),
         body: const TabBarView(
@@ -254,7 +269,10 @@ class GroupsTab extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                     ),
-                    child: const Text("Aceptar", style: TextStyle(color: Colors.white),),
+                    child: const Text(
+                      "Aceptar",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   ElevatedButton(
@@ -274,7 +292,10 @@ class GroupsTab extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                     ),
-                    child: const Text("Rechazar", style: TextStyle(color: Colors.white),),
+                    child: const Text(
+                      "Rechazar",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutterapp/presentation/routes/routes.dart';
 
 class Canchas extends StatefulWidget {
   const Canchas({super.key});
@@ -14,17 +15,15 @@ class _CanchasState extends State<Canchas> {
       'nombre': 'Cancha N1',
       'direccion': 'Av. Principal 123, Ciudad',
       'descripcion':
-          'Un gimnasio completo con equipo moderno y excelentes instalaciones.',
+          'Un espacio deportivo completo con equipo moderno y excelentes instalaciones.',
       'calificacion': 4.5,
-      'imagen': 'https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg.webp',
+      'imagen':
+          'https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg.webp',
       'servicios': {
-        'Renta de Equipo Deportivo': true,
-        'Entrenadores Personales': true,
-        'Piscina': true,
-        'Sauna': false,
-        'Turco': false,
-        'Duchas': true,
-        'Vestidores': true,
+        'Cancha de Futbol': true,
+        'Cancha de Ecuavoley': true,
+        'Equipos Deportivos': true,
+        'Piscina': false,
       },
     },
     {
@@ -33,32 +32,13 @@ class _CanchasState extends State<Canchas> {
       'descripcion':
           'Espacio para entrenar con áreas de cardio y pesas libres.',
       'calificacion': 3.8,
-      'imagen': 'https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg.webp',
+      'imagen':
+          'https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg.webp',
       'servicios': {
-        'Renta de Equipo Deportivo': false,
-        'Entrenadores Personales': true,
+        'Cancha de Futbol': true,
+        'Cancha de Ecuavoley': false,
+        'Equipos Deportivos': true,
         'Piscina': false,
-        'Sauna': true,
-        'Turco': true,
-        'Duchas': true,
-        'Vestidores': true,
-      },
-    },
-    {
-      'nombre': 'Cancha N3',
-      'direccion': 'Boulevard 789, Ciudad',
-      'descripcion':
-          'Relájate y mantente en forma con nuestras opciones de spa y fitness.',
-      'calificacion': 4.9,
-      'imagen': 'https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg.webp',
-      'servicios': {
-        'Renta de Equipo Deportivo': true,
-        'Entrenadores Personales': false,
-        'Piscina': true,
-        'Sauna': true,
-        'Turco': true,
-        'Duchas': true,
-        'Vestidores': false,
       },
     },
   ];
@@ -114,7 +94,11 @@ class _CanchasState extends State<Canchas> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 12, left: 20, bottom: 8,),
+                          padding: const EdgeInsets.only(
+                            top: 12,
+                            left: 20,
+                            bottom: 8,
+                          ),
                           child: Row(
                             children: [
                               Icon(
@@ -175,7 +159,8 @@ class _CanchasState extends State<Canchas> {
                               const SizedBox(height: 10),
                               Text(
                                 local['descripcion'],
-                                style: TextStyle(color: Colors.grey[400], fontSize: 16),
+                                style: TextStyle(
+                                    color: Colors.grey[400], fontSize: 16),
                               ),
                               const SizedBox(height: 15),
                               Divider(color: Colors.grey[300]),
@@ -193,9 +178,44 @@ class _CanchasState extends State<Canchas> {
                                 runSpacing: 10,
                                 children: local['servicios']
                                     .entries
-                                    .map<Widget>((entry) =>
-                                        _buildServiceChip(entry.key, entry.value))
+                                    .map<Widget>((entry) => _buildServiceChip(
+                                        entry.key, entry.value))
                                     .toList(),
+                              ),
+                              const SizedBox(height: 15),
+                              Divider(color: Colors.grey[300]),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .end, // Posiciona el contenido al final
+                                children: [
+                                  ElevatedButton.icon(
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, Routes.newReservePage);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 12),
+                                    ),
+                                    icon: const Icon(
+                                      Icons.event_available, // Ícono de reserva
+                                      color: Colors.black,
+                                    ),
+                                    label: const Text(
+                                      'Reservar este espacio',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

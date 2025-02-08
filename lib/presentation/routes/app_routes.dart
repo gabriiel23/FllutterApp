@@ -7,6 +7,8 @@ import 'package:flutterapp/presentation/login_page.dart';
 import 'package:flutterapp/presentation/logout_page.dart';
 import 'package:flutterapp/presentation/navegation/navigationBar.dart';
 import 'package:flutterapp/presentation/newGroup_page.dart';
+import 'package:flutterapp/presentation/newReserve_page.dart';
+import 'package:flutterapp/presentation/payment_page.dart';
 import 'package:flutterapp/presentation/profile_page.dart';
 import 'package:flutterapp/presentation/registration_page.dart';
 import 'package:flutterapp/presentation/reserves_page.dart';
@@ -31,6 +33,8 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.groups: (_) => Groups(),
     Routes.reserves: (_) => Reserves(),
     Routes.canchas: (_) => Canchas(),
+    Routes.newReservePage: (_) => NewReservePage(),
+    Routes.payment: (_) => PaymentPage(),
 
 
 

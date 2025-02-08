@@ -190,6 +190,33 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
+                  Card(
+                    child: Container(
+                      width: 200,
+                      child: Image.network(
+                        'https://www.shutterstock.com/image-photo/soccer-football-background-ball-pair-600nw-2025816362.jpg',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Container(
+                      width: 200,
+                      child: Image.network(
+                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRnReWxPokNADhge6s31jycM2F4h4dxJB8S6w&s',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Card(
+                    child: Container(
+                      width: 200,
+                      child: Image.network(
+                        'https://www.canchasfutboleros.com/uploads/1/3/7/3/137335804/canchas-sinteticas-futboleros-5-centro_orig.jpeg',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -217,7 +244,7 @@ class _HomeState extends State<Home> {
                     children: [
                       Expanded(
                         child: Image.network(
-                          'https://m.media-amazon.com/images/I/71CyHz0JdOL._AC_UF894,1000_QL80_.jpg',
+                          'https://lirp.cdn-website.com/09dcdaca/dms3rep/multi/opt/empty-white-gate-2023-11-27-05-37-03-utc+%281%29-640w.jpg',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -237,7 +264,7 @@ class _HomeState extends State<Home> {
                     children: [
                       Expanded(
                         child: Image.network(
-                          'https://m.media-amazon.com/images/I/71CyHz0JdOL._AC_UF894,1000_QL80_.jpg',
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQelhpBoKhpJtJ-tF56j-dX0cqXHoRjgcd7YrdS_qmrOvNSSRn-U1eUuZ4I6VO29kzG0EY&usqp=CAU',
                           fit: BoxFit.cover,
                         ),
                       ),

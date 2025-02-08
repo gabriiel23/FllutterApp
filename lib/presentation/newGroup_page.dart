@@ -103,7 +103,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                   filled: true,
                   fillColor: Colors.grey,
                   hintText: "Escribe el nombre del grupo",
-                  hintStyle: GoogleFonts.sansita(color: const Color(0xFF19382F), fontWeight: FontWeight.w600),
+                  hintStyle: GoogleFonts.sansita(color: Colors.white),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -130,7 +130,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                   filled: true,
                   fillColor: Colors.grey,
                   hintText: "Escribe una breve descripción",
-                  hintStyle: GoogleFonts.sansita(color: const Color(0xFF19382F), fontWeight: FontWeight.w600),
+                  hintStyle: GoogleFonts.sansita(color: Colors.white),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,
@@ -155,7 +155,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                   filled: true,
                   fillColor: Colors.grey,
                   hintText: "Ingresa el nombre del jugador",
-                  hintStyle: GoogleFonts.sansita(color: const Color(0xFF19382F), fontWeight: FontWeight.w600),
+                  hintStyle: GoogleFonts.sansita(color: Colors.white),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,

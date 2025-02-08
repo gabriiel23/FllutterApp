@@ -1,5 +1,5 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
     "CodeGPT.apiKey": "CodeGPT Plus Beta",
-    "dart.flutterSdkPath": "~/Downloads/flutter"
+    "dart.flutterSdkPath": "C:/programacion/flutter/bin"
 }
