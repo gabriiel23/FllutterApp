@@ -5,8 +5,6 @@ import 'package:flutterapp/features/canchas/presentation/pages/canchas_page.dart
 import 'package:flutterapp/features/reserves/presentation/pages/reserves_page.dart';
 import 'package:flutterapp/features/profile/presentation/pages/profile_page.dart';
 
-
-
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -25,6 +23,22 @@ class _MainScreenState extends State<MainScreen> {
     ProfilePage(),
   ];
 
+  final List<String> _labels = [
+    'Inicio',
+    'Canchas',
+    'Comunidad',
+    'Tus reservas',
+    'Perfil'
+  ];
+
+  final List<IconData> _icons = [
+    Icons.home,
+    Icons.location_on,
+    Icons.group,
+    Icons.history_outlined,
+    Icons.person_pin,
+  ];
+
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
@@ -41,24 +55,30 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xFF19382F),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(5, (index) {
-              final icons = [
-                Icons.home,
-                Icons.location_on,
-                Icons.group,
-                Icons.history_outlined,
-                Icons.person_pin,
-              ];
-              return IconButton(
-                icon: Icon(
-                  icons[index],
-                  size: 26,
-                  color: _currentIndex == index ? Colors.white : Colors.grey,
+              return InkWell(
+                onTap: () => _onItemTapped(index),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _icons[index],
+                      size: 22,
+                      color: _currentIndex == index ? Colors.white : Colors.grey,
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      _labels[index],
+                      style: TextStyle(
+                        color: _currentIndex == index ? Colors.white : Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
                 ),
-                onPressed: () => _onItemTapped(index),
               );
             }),
           ),

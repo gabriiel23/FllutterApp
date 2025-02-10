@@ -29,7 +29,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Crear Nuevo Grupo", style: GoogleFonts.sansita(color: Colors.white)),
+        title: Text("Crear Nuevo Grupo",
+            style: GoogleFonts.sansita(color: Colors.white)),
         backgroundColor: Color(0xFF19382F), // Color verde oscuro
         iconTheme: IconThemeData(color: Colors.white),
       ),
@@ -61,7 +62,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                     height: 150,
                     width: 150,
                     decoration: BoxDecoration(
-                      color: Colors.grey[800],
+                      color: Color(0xFF2A5B4E),
                       shape: BoxShape.circle, // Hacemos la imagen circular
                       border: Border.all(color: Colors.white),
                     ),
@@ -101,7 +102,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                 controller: _groupNameController,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: Colors.grey,
+                  fillColor: Color(0xFF2A5B4E),
                   hintText: "Escribe el nombre del grupo",
                   hintStyle: GoogleFonts.sansita(color: Colors.white),
                   border: OutlineInputBorder(
@@ -128,7 +129,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                 maxLines: 4,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: Colors.grey,
+                  fillColor: Color(0xFF2A5B4E),
                   hintText: "Escribe una breve descripción",
                   hintStyle: GoogleFonts.sansita(color: Colors.white),
                   border: OutlineInputBorder(
@@ -153,7 +154,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                 style: TextStyle(color: Colors.white),
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: Colors.grey,
+                  fillColor: Color(0xFF2A5B4E),
                   hintText: "Ingresa el nombre del jugador",
                   hintStyle: GoogleFonts.sansita(color: Colors.white),
                   border: OutlineInputBorder(
@@ -176,8 +177,12 @@ class _NewGroupPageState extends State<NewGroupPage> {
                   ? Column(
                       children: _players.map((player) {
                         return ListTile(
-                          title: Text(player,
-                              style: TextStyle(color: Colors.grey)),
+                          tileColor: Colors.grey.shade300, // Corrección aquí
+                          title: Text(
+                            player,
+                            style: TextStyle(
+                                color: Colors.black), // Cambia el texto a blanco para contraste
+                          ),
                           trailing: IconButton(
                             icon: Icon(Icons.remove_circle, color: Colors.red),
                             onPressed: () {
@@ -190,7 +195,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
                       }).toList(),
                     )
                   : Text("No hay jugadores agregados.",
-                      style: GoogleFonts.sansita(color: const Color(0xFF19382F))),
+                      style:
+                          GoogleFonts.sansita(color: const Color(0xFF19382F))),
 
               SizedBox(height: 30),
 
@@ -216,7 +222,7 @@ class _NewGroupPageState extends State<NewGroupPage> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF19382F),
+                    backgroundColor: Color.fromARGB(255, 40, 84, 72),
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -224,7 +230,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
                   ),
                   child: Text(
                     "Crear Grupo",
-                    style: GoogleFonts.sansita(fontSize: 18, color: Colors.white),
+                    style:
+                        GoogleFonts.sansita(fontSize: 18, color: Colors.white),
                   ),
                 ),
               ),

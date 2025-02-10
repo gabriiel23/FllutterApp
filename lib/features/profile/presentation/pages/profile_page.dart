@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutterapp/core/routes/routes.dart';
 
 class ProfilePage extends StatelessWidget {
   
@@ -124,7 +125,7 @@ class ProfilePage extends StatelessWidget {
               ),
             ),
             const Divider(),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             // Botón para editar perfil
             ElevatedButton.icon(
               onPressed: () {
@@ -134,7 +135,26 @@ class ProfilePage extends StatelessWidget {
               icon: const Icon(Icons.edit),
               label: Text(
                 'Editar Perfil',
-                style: GoogleFonts.sansita(color: Colors.white),  // Fuente aplicada al texto del botón
+                style: GoogleFonts.sansita(color: Colors.white, fontSize: 15),  // Fuente aplicada al texto del botón
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF19382F),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: () {
+                // Acción para editar perfil
+                Navigator.pushNamed(context, Routes.profilePlayer);
+              },
+              icon: const Icon(Icons.person_pin_outlined),
+              label: Text(
+                'Crear perfil de Jugador',
+                style: GoogleFonts.sansita(color: Colors.white, fontSize: 16),  // Fuente aplicada al texto del botón
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF19382F),
