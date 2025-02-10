@@ -25,4 +25,5 @@ class Routes {
   static const canchas = '/cachas';
   static const newReservePage = '/newReserve';
   static const payment = '/payment';
+  static const newCanchaPage = '/newCancha';
 }

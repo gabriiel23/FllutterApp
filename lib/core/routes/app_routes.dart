@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/features/canchas/presentation/pages/newCancha_page.dart';
 
 import 'package:flutterapp/features/comunity/presentation/pages/groups_page.dart';
 import 'package:flutterapp/features/home/presentation/pages/home_page.dart';
@@ -37,6 +38,7 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.canchas: (_) => Canchas(),
     Routes.newReservePage: (_) => NewReservePage(),
     Routes.payment: (_) => PaymentPage(),
+    Routes.newCanchaPage: (_) => NewCanchaPage(),
 
 
 

@@ -77,6 +77,38 @@ class _CanchasState extends State<Canchas> {
               const SizedBox(height: 12.0),
               const Divider(),
               const SizedBox(height: 12.0),
+              Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.center, // Posiciona el contenido al centro
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, Routes.newCanchaPage);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey.shade300,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                    ),
+                    icon: const Icon(
+                      Icons.add_location_alt_outlined, // Ícono de nuevo
+                      color: Colors.black,
+                    ),
+                    label: const Text(
+                      'Crear una nueva cancha',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12.0),
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -191,7 +223,8 @@ class _CanchasState extends State<Canchas> {
                                 children: [
                                   ElevatedButton.icon(
                                     onPressed: () {
-                                      Navigator.pushNamed(context, Routes.newReservePage);
+                                      Navigator.pushNamed(
+                                          context, Routes.newReservePage);
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.white,
