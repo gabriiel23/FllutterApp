@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; // Asegúrate de agregar esta dependencia si la usas
-import 'routes/routes.dart';
+import 'package:flutterapp/core/routes/routes.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

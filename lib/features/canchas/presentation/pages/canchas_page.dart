@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutterapp/presentation/routes/routes.dart';
+import 'package:flutterapp/core/routes/routes.dart';
 
 class Canchas extends StatefulWidget {
   const Canchas({super.key});

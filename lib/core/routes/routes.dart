@@ -1,6 +1,4 @@
 
-import 'package:flutterapp/presentation/payment_page.dart';
-
 class Routes {
   // Constructor privado
   Routes._();

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapp/presentation/groups_page.dart';
-import 'package:flutterapp/presentation/home_page.dart';
-import 'package:flutterapp/presentation/canchas_page.dart';
-import 'package:flutterapp/presentation/reserves_page.dart';
-import 'package:flutterapp/presentation/profile_page.dart';
+import 'package:flutterapp/features/comunity/presentation/pages/groups_page.dart';
+import 'package:flutterapp/features/home/presentation/pages/home_page.dart';
+import 'package:flutterapp/features/canchas/presentation/pages/canchas_page.dart';
+import 'package:flutterapp/features/reserves/presentation/pages/reserves_page.dart';
+import 'package:flutterapp/features/profile/presentation/pages/profile_page.dart';
 
 
 

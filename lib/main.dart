@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapp/presentation/routes/app_routes.dart';
-import 'package:flutterapp/presentation/routes/routes.dart';
+import 'package:flutterapp/core/routes/app_routes.dart';
+import 'package:flutterapp/core/routes/routes.dart';
 import 'package:provider/provider.dart';  
 import 'theme/theme_provider.dart'; 
 
