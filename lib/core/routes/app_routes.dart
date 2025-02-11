@@ -8,7 +8,6 @@ import 'package:flutterapp/features/profile/presentation/pages/profilePlayer_pag
 import 'package:flutterapp/features/reserves/presentation/pages/reserves_page.dart';
 import 'package:flutterapp/features/profile/presentation/pages/profile_page.dart';
 
-import 'package:flutterapp/features/canchas/presentation/pages/locales_page.dart';
 import 'package:flutterapp/features/registerUser/presentation/pages/login_page.dart';
 import 'package:flutterapp/features/registerUser/presentation/pages/logout_page.dart';
 import 'package:flutterapp/core/routes/navegation/navigationBar.dart';
@@ -32,7 +31,6 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.registration: (_) => RegistrationPage(),
     Routes.profile: (_) => ProfilePage(),
     Routes.settings: (_) => SettingsPage(),
-    Routes.locals: (_) => LocalesPage(),
     Routes.newGroupPage: (_) => NewGroupPage(),
     Routes.groups: (_) => Groups(),
     Routes.reserves: (_) => Reserves(),
