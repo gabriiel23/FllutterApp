@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutterapp/core/routes/routes.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Canchas extends StatefulWidget {
   const Canchas({super.key});
@@ -10,38 +13,36 @@ class Canchas extends StatefulWidget {
 }
 
 class _CanchasState extends State<Canchas> {
-  final List<Map<String, dynamic>> _locales = [
-    {
-      'nombre': 'Cancha N1',
-      'direccion': 'Av. Principal 123, Ciudad',
-      'descripcion':
-          'Un espacio deportivo completo con equipo moderno y excelentes instalaciones.',
-      'calificacion': 4.5,
-      'imagen':
-          'https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg.webp',
-      'servicios': {
-        'Cancha de Futbol': true,
-        'Cancha de Ecuavoley': true,
-        'Equipos Deportivos': true,
-        'Piscina': false,
-      },
-    },
-    {
-      'nombre': 'Cancha N2',
-      'direccion': 'Calle Secundaria 456, Ciudad',
-      'descripcion':
-          'Espacio para entrenar con áreas de cardio y pesas libres.',
-      'calificacion': 3.8,
-      'imagen':
-          'https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/238D/production/_95410190_gettyimages-488144002.jpg.webp',
-      'servicios': {
-        'Cancha de Futbol': true,
-        'Cancha de Ecuavoley': false,
-        'Equipos Deportivos': true,
-        'Piscina': false,
-      },
-    },
-  ];
+  List<Map<String, dynamic>> _locales = [];
+  bool _isLoading = true;
+  final String apiUrl = "http://localhost:3000/api/canchas";
+  String baseUrl = "http://localhost:3000/";
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCanchas();
+  }
+
+  Future<void> _fetchCanchas() async {
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          _locales = List<Map<String, dynamic>>.from(data);
+          _isLoading = false;
+        });
+      } else {
+        throw Exception("Error al obtener canchas");
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      print("Error: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,246 +61,157 @@ class _CanchasState extends State<Canchas> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: SingleChildScrollView(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _locales.isEmpty
+                ? const Center(child: Text("No hay canchas disponibles"))
+                : _buildCanchasList(),
+      ),
+    );
+  }
+
+  Widget _buildCanchasList() {
+    return ListView.builder(
+      itemCount: _locales.length,
+      itemBuilder: (context, index) {
+        final local = _locales[index];
+        final double rating = (local['calificacion'] ?? 0).toDouble();
+        final List<String> servicios = local['servicios'] ?? [];
+
+String imageUrl = "${baseUrl}uploads/${local['imagenes'][0].split('\\').last}";
+
+
+        return Card(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          elevation: 5,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          color: const Color(0xFF19382F),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 24.0),
-              Text(
-                "Encuentra las mejores canchas de la ciudad de Loja:",
-                style: GoogleFonts.sansita(
-                  fontSize: 16,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(height: 12.0),
-              _buildSearchBar(),
-              const SizedBox(height: 12.0),
-              const Divider(),
-              const SizedBox(height: 12.0),
-              Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Posiciona el contenido al centro
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pushNamed(context, Routes.newCanchaPage);
+              if (imageUrl.isNotEmpty)
+                ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(15)),
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    height: 200,
+                    width: double.infinity,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const Center(child: CircularProgressIndicator());
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey.shade300,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
-                    ),
-                    icon: const Icon(
-                      Icons.add_location_alt_outlined, // Ícono de nuevo
-                      color: Colors.black,
-                    ),
-                    label: const Text(
-                      'Crear una nueva cancha',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
+                    errorBuilder: (context, error, stackTrace) {
+                      return const SizedBox.shrink();
+                    },
                   ),
-                ],
-              ),
-              const SizedBox(height: 12.0),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _locales.length,
-                itemBuilder: (context, index) {
-                  final local = _locales[index];
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+                ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      local['nombre'] ?? 'Nombre no disponible',
+                      style: GoogleFonts.sansita(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                    color: const Color(0xFF19382F),
-                    child: Column(
+                    const SizedBox(height: 5),
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on,
+                            color: Colors.green, size: 20),
+                        const SizedBox(width: 8.0),
+                        Text(local['direccion'] ?? 'Dirección no disponible',
+                            style: const TextStyle(color: Colors.green)),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      local['descripcion'] ?? 'Sin descripción',
+                      style: TextStyle(color: Colors.grey[400], fontSize: 16),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        RatingBarIndicator(
+                          rating: rating,
+                          itemBuilder: (context, _) =>
+                              const Icon(Icons.star, color: Colors.amber),
+                          itemCount: 5,
+                          itemSize: 25,
+                          direction: Axis.horizontal,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          rating.toStringAsFixed(1),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 12,
-                            left: 20,
-                            bottom: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.star,
-                                color: Colors.yellow[700],
-                                size: 20,
-                              ),
-                              const SizedBox(width: 8.0),
-                              Text(
-                                '${local['calificacion']}',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
+                        const Text(
+                          "Servicios Disponibles",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(15)),
-                          child: Image.network(
-                            local['imagen'],
-                            fit: BoxFit.cover,
-                            height: 200,
-                            width: double.infinity,
-                          ),
+                        const SizedBox(height: 5),
+                        Wrap(
+                          spacing: 10,
+                          children: servicios.map((servicio) {
+                            return Chip(
+                              label: Text(servicio,
+                                  style: TextStyle(color: Colors.white)),
+                              backgroundColor: Colors.green,
+                            );
+                          }).toList(),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                local['nombre'],
-                                style: GoogleFonts.sansita(
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    color: Colors.green,
-                                    size: 20,
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  Text(
-                                    local['direccion'],
-                                    style: TextStyle(color: Colors.green),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                local['descripcion'],
-                                style: TextStyle(
-                                    color: Colors.grey[400], fontSize: 16),
-                              ),
-                              const SizedBox(height: 15),
-                              Divider(color: Colors.grey[300]),
-                              Text(
-                                'Servicios Disponibles',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 10,
-                                children: local['servicios']
-                                    .entries
-                                    .map<Widget>((entry) => _buildServiceChip(
-                                        entry.key, entry.value))
-                                    .toList(),
-                              ),
-                              const SizedBox(height: 15),
-                              Divider(color: Colors.grey[300]),
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .end, // Posiciona el contenido al final
-                                children: [
-                                  ElevatedButton.icon(
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                          context, Routes.newReservePage);
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 12),
-                                    ),
-                                    icon: const Icon(
-                                      Icons.event_available, // Ícono de reserva
-                                      color: Colors.black,
-                                    ),
-                                    label: const Text(
-                                      'Reservar este espacio',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.pushNamed(context, Routes.newReservePage);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 12),
+                          ),
+                          icon: const Icon(Icons.event_available,
+                              color: Colors.black),
+                          label: const Text(
+                            'Reservar este espacio',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                  );
-                },
+                  ],
+                ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      decoration: BoxDecoration(
-        color: const Color(0xFF19382F),
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.search, color: Colors.white70),
-          const SizedBox(width: 8.0),
-          Expanded(
-            child: TextField(
-              style: GoogleFonts.sansita(color: Colors.white),
-              decoration: const InputDecoration(
-                hintText: "Busca tu cancha...",
-                hintStyle: TextStyle(color: Colors.white),
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServiceChip(String label, bool available) {
-    return Chip(
-      label: Text(
-        label,
-        style: TextStyle(
-          color: available ? Colors.white : Colors.white,
-        ),
-      ),
-      backgroundColor: available ? Colors.green : Colors.grey,
+        );
+      },
     );
   }
 }

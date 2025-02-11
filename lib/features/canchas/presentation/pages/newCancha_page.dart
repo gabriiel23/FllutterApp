@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class NewCanchaPage extends StatefulWidget {
   @override
@@ -11,20 +14,80 @@ class NewCanchaPage extends StatefulWidget {
 class _NewCanchaPageState extends State<NewCanchaPage> {
   final _canchaNameController = TextEditingController();
   final _canchaDescriptionController = TextEditingController();
-  final _canchaRatingController = TextEditingController();
-  List<String> _selectedServices = [];
+  final _canchaDireccionController = TextEditingController();
+  double _canchaRating = 3.0; // Valor predeterminado de calificación
+  String? _selectedTipoServicio;
   XFile? _image;
   final ImagePicker _picker = ImagePicker();
 
-  List<String> opcionesServicios = [
-    'Piscina', 'Iluminación', 'Parqueadero'
-  ];
+  List<String> tiposServicios = ['sintética', 'básquet', 'vóley', 'fútbol', 'tenis', 'piscina', 'otros'];
 
   Future<void> _pickImage() async {
     final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       _image = pickedImage;
     });
+  }
+  
+  Future<void> _crearCancha() async {
+    if (_canchaNameController.text.isEmpty ||
+        _canchaDescriptionController.text.isEmpty ||
+        _canchaDireccionController.text.isEmpty ||
+        _selectedTipoServicio == null) {
+      _mostrarAlerta('Error', 'Por favor, completa todos los campos.');
+      return;
+    }
+
+    var url = Uri.parse('http://localhost:3000/api/canchas');
+    
+    Map<String, dynamic> canchaData = {
+      "nombre": _canchaNameController.text,
+      "direccion": _canchaDireccionController.text,
+      "descripcion": _canchaDescriptionController.text,
+      "disponible": true,
+      "calificacion": _canchaRating,
+      "servicio": _selectedTipoServicio,
+      "imagenes": _image != null ? [_image!.path] : [],
+    };
+
+    try {
+      var response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(canchaData),
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Cancha creada con éxito')),
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        _mostrarAlerta('Error', 'No se pudo crear la cancha.');
+      }
+    } catch (error) {
+      _mostrarAlerta('Error de conexión', 'No se pudo conectar con el servidor.');
+    }
+  }
+
+  void _mostrarAlerta(String titulo, String mensaje) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(titulo),
+          content: Text(mensaje),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -42,36 +105,22 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Text(
-                  "Cargar Imagen de la Cancha",
-                  style: GoogleFonts.sansita(
-                    fontSize: 18,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Center(
-                // Centramos el contenedor de la imagen
                 child: GestureDetector(
-                  onTap:
-                      _pickImage, // Llama a la función para seleccionar la imagen
+                  onTap: _pickImage,
                   child: Container(
                     height: 150,
                     width: 150,
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 42, 91, 78),
-                      shape: BoxShape.circle, // Hacemos la imagen circular
+                      color: Color(0xFF2A5B4E),
+                      shape: BoxShape.circle,
                       border: Border.all(color: Colors.white),
                     ),
                     child: _image == null
                         ? Center(
                             child: Text(
                               "Toca aquí para seleccionar una imagen",
-                              style: GoogleFonts.sansita(
-                                color: Colors.white,
-                              ),
+                              style: GoogleFonts.sansita(color: Colors.white),
+                              textAlign: TextAlign.center,
                             ),
                           )
                         : ClipOval(
@@ -86,72 +135,27 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
                 ),
               ),
               SizedBox(height: 20),
-              Text("Nombre", style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              TextField(
-                controller: _canchaNameController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xFF2A5B4E),
-                  hintText: "Escribe el nombre de la cancha",
-                  hintStyle: GoogleFonts.sansita(color: Colors.white),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
+              _buildTextField("Nombre", _canchaNameController),
               SizedBox(height: 20),
-              Text("Descripción", style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              TextField(
-                controller: _canchaDescriptionController,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xFF2A5B4E),
-                  hintText: "Escribe una breve descripción",
-                  hintStyle: GoogleFonts.sansita(color: Colors.white),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
+              _buildTextField("Dirección", _canchaDireccionController),
               SizedBox(height: 20),
-              Text("Calificación", style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              TextField(
-                controller: _canchaRatingController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xFF2A5B4E),
-                  hintText: "Escribe una calificación del 1 al 5",
-                  hintStyle: GoogleFonts.sansita(color: Colors.white),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
+              _buildTextField("Descripción", _canchaDescriptionController, maxLines: 4),
               SizedBox(height: 20),
-              CanchaServiceSelector(
-                servicios: _selectedServices,
-                opcionesServicios: opcionesServicios,
-                onServiceChanged: (newServices) {
-                  setState(() {
-                    _selectedServices = newServices;
-                  });
-                },
-              ),
-              SizedBox(height: 30),
+              _buildRatingBar(),
+              SizedBox(height: 20),
+              _buildDropdown("Tipo de Cancha", tiposServicios, (String? value) {
+                setState(() {
+                  _selectedTipoServicio = value;
+                });
+              }),
+              SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    String canchaName = _canchaNameController.text;
-                    String canchaDescription = _canchaDescriptionController.text;
-                    if (canchaName.isNotEmpty && canchaDescription.isNotEmpty && _selectedServices.isNotEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Cancha creada: $canchaName')),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Por favor, completa todos los campos')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(backgroundColor: Color.fromARGB(255, 40, 84, 72), padding: EdgeInsets.only(right: 40, left: 40, top: 12, bottom: 12)),
+                  onPressed: _crearCancha,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF285448),
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                  ),
                   child: Text("Crear Cancha", style: GoogleFonts.sansita(fontSize: 18, color: Colors.white)),
                 ),
               ),
@@ -162,42 +166,72 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
       ),
     );
   }
-}
-
-class CanchaServiceSelector extends StatelessWidget {
-  final List<String> servicios;
-  final List<String> opcionesServicios;
-  final Function(List<String>) onServiceChanged;
-
-  CanchaServiceSelector({required this.servicios, required this.opcionesServicios, required this.onServiceChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 1.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Servicios:', style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
-          SizedBox(height: 12),
-          Wrap(
-            spacing: 6.0,
-            children: opcionesServicios.map((servicio) {
-              return ChoiceChip(
-                label: Text(servicio),
-                selected: servicios.contains(servicio),
-                onSelected: (selected) {
-                  List<String> updatedServices = List.from(servicios);
-                  selected ? updatedServices.add(servicio) : updatedServices.remove(servicio);
-                  onServiceChanged(updatedServices);
-                },
-                selectedColor: Color(0xFF2A5B4E),
-                labelStyle: TextStyle(color: servicios.contains(servicio) ? Colors.white : Colors.black),
-              );
-            }).toList(),
+    Widget _buildDropdown(String label, List<String> options, Function(String?) onChanged) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
+        SizedBox(height: 10),
+        DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Color(0xFF2A5B4E),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
-        ],
-      ),
+          value: _selectedTipoServicio,
+          items: options.map((String option) {
+            return DropdownMenuItem<String>(
+              value: option,
+              child: Text(option, style: GoogleFonts.sansita(color: Colors.black)),
+            );
+          }).toList(),
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+
+
+  Widget _buildTextField(String label, TextEditingController controller, {int maxLines = 1}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
+        SizedBox(height: 10),
+        TextField(
+          controller: controller,
+          maxLines: maxLines,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Color(0xFF2A5B4E),
+            hintText: "Escribe $label",
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRatingBar() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Calificación", style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
+        SizedBox(height: 10),
+        RatingBar.builder(
+          initialRating: _canchaRating,
+          minRating: 1,
+          direction: Axis.horizontal,
+          allowHalfRating: true,
+          itemCount: 5,
+          itemBuilder: (context, _) => Icon(Icons.star, color: Colors.amber),
+          onRatingUpdate: (rating) {
+            setState(() {
+              _canchaRating = rating;
+            });
+          },
+        ),
+      ],
     );
   }
 }
