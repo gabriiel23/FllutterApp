@@ -67,6 +67,13 @@ class _CanchasState extends State<Canchas> {
                 ? const Center(child: Text("No hay canchas disponibles"))
                 : _buildCanchasList(),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, Routes.newCanchaPage);
+        },
+        backgroundColor: const Color(0xFF19382F),
+        child: const Icon(Icons.add, color: Colors.white),
+      ),
     );
   }
 
@@ -78,22 +85,19 @@ class _CanchasState extends State<Canchas> {
         final double rating = (local['calificacion'] ?? 0).toDouble();
         final List<String> servicios = local['servicios'] ?? [];
 
-String imageUrl = "${baseUrl}uploads/${local['imagenes'][0].split('\\').last}";
-
+        String imageUrl = "${baseUrl}uploads/${local['imagenes'][0].split('\\').last}";
 
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 8.0),
           elevation: 5,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
           color: const Color(0xFF19382F),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (imageUrl.isNotEmpty)
                 ClipRRect(
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(15)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
                   child: Image.network(
                     imageUrl,
                     fit: BoxFit.cover,
@@ -124,8 +128,7 @@ String imageUrl = "${baseUrl}uploads/${local['imagenes'][0].split('\\').last}";
                     const SizedBox(height: 5),
                     Row(
                       children: [
-                        const Icon(Icons.location_on,
-                            color: Colors.green, size: 20),
+                        const Icon(Icons.location_on, color: Colors.green, size: 20),
                         const SizedBox(width: 8.0),
                         Text(local['direccion'] ?? 'Dirección no disponible',
                             style: const TextStyle(color: Colors.green)),
@@ -150,8 +153,7 @@ String imageUrl = "${baseUrl}uploads/${local['imagenes'][0].split('\\').last}";
                         const SizedBox(width: 10),
                         Text(
                           rating.toStringAsFixed(1),
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 16),
+                          style: const TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ],
                     ),
@@ -168,8 +170,7 @@ String imageUrl = "${baseUrl}uploads/${local['imagenes'][0].split('\\').last}";
                           spacing: 10,
                           children: servicios.map((servicio) {
                             return Chip(
-                              label: Text(servicio,
-                                  style: TextStyle(color: Colors.white)),
+                              label: Text(servicio, style: TextStyle(color: Colors.white)),
                               backgroundColor: Colors.green,
                             );
                           }).toList(),
@@ -189,11 +190,9 @@ String imageUrl = "${baseUrl}uploads/${local['imagenes'][0].split('\\').last}";
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 12),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                           ),
-                          icon: const Icon(Icons.event_available,
-                              color: Colors.black),
+                          icon: const Icon(Icons.event_available, color: Colors.black),
                           label: const Text(
                             'Reservar este espacio',
                             style: TextStyle(
