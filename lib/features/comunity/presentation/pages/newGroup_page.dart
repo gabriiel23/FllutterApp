@@ -11,7 +11,7 @@ class NewGroupPage extends StatefulWidget {
 class _NewGroupPageState extends State<NewGroupPage> {
   final _groupNameController = TextEditingController();
   final _groupDescriptionController = TextEditingController();
-  List<String> _players = [];
+  final List<String> _players = [];
   List<Map<String, String>> _allPlayers = []; // Lista de jugadores con ID y nombre
 
   final String apiUrl = "http://localhost:3000/api/grupo"; // API de grupos

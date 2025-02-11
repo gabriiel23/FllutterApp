@@ -10,20 +10,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int _currentIndex = 0;
-
-  final List<String> _routes = [
-    Routes.home, // Home 
-    Routes.reserves, // Reservas
-    Routes.events, // Eventos
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-    Navigator.pushNamed(context, _routes[index]);
-  }
 
   @override
   Widget build(BuildContext context) {

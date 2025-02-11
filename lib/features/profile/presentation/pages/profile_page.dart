@@ -130,7 +130,7 @@ class ProfilePage extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: () {
                 // Acción para editar perfil
-                print('Editar perfil');
+                // print('Editar perfil');
               },
               icon: const Icon(Icons.edit),
               label: Text(

@@ -5,7 +5,7 @@ import 'dart:async';
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    print("Ejecutando tarea en segundo plano...");
+    // print("Ejecutando tarea en segundo plano...");
 
     // Obtener la hora actual
     DateTime now = DateTime.now();

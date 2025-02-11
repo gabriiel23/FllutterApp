@@ -72,7 +72,7 @@ class SettingsPage extends StatelessWidget {
               ),
               onTap: () {
                 // Acción al pulsar
-                print('Abrir configuraciones de notificaciones');
+                // print('Abrir configuraciones de notificaciones');
               },
             ),
             const Divider(),
@@ -91,7 +91,7 @@ class SettingsPage extends StatelessWidget {
               ),
               onTap: () {
                 // Acción al pulsar
-                print('Abrir configuraciones de idioma');
+                // print('Abrir configuraciones de idioma');
               },
             ),
           ],

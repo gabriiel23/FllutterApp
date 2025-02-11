@@ -138,7 +138,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ElevatedButton(
                     onPressed: () {
                       // Acción de registro
-                      print('Registrando: ${_nameController.text}, ${_emailController.text}');
+                      // print('Registrando: ${_nameController.text}, ${_emailController.text}');
                     },
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(
