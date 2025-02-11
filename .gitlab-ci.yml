@@ -1,0 +1,44 @@
+image: instrumentisto/flutter
+
+stages:
+  - test
+  - build
+  - deploy
+before_script:
+  - flutter pub get
+test:
+  stage: test
+  script:
+    - flutter analyze
+    - flutter test
+    - flutter test --coverage
+    - apt-get update && apt-get install -y lcov  
+    - genhtml -o coverage/html coverage/lcov.info  
+    - lcov --rc lcov_branch_coverage=1 --list coverage/lcov.info > coverage/coverage.xml
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura 
+        path: coverage/cobertura.xml
+    paths:
+      - coverage/
+build_web:
+  stage: build
+  script:
+    - flutter build web
+  artifacts:
+    paths:
+      - build/web
+
+deploy:
+  stage: deploy
+  script:
+    - mkdir -p public
+    - cp -r build/web/* public/
+  pages: true
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week # Opcional: define cuánto tiempo conservar los artefactos
+  only:
+    - main
