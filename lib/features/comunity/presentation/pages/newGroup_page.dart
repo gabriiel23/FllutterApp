@@ -1,7 +1,7 @@
-import 'dart:io'; // Asegúrate de importar dart:io
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:google_fonts/google_fonts.dart'; // Importa Google Fonts
+import 'package:http/http.dart' as http;
+import 'package:google_fonts/google_fonts.dart';
 
 class NewGroupPage extends StatefulWidget {
   @override
@@ -12,231 +12,183 @@ class _NewGroupPageState extends State<NewGroupPage> {
   final _groupNameController = TextEditingController();
   final _groupDescriptionController = TextEditingController();
   List<String> _players = [];
-  XFile? _image; // Almacena la imagen seleccionada
+  List<Map<String, String>> _allPlayers = []; // Lista de jugadores con ID y nombre
 
-  final ImagePicker _picker = ImagePicker();
+  final String apiUrl = "http://localhost:3000/api/grupo"; // API de grupos
+  final String playersApiUrl = "http://localhost:3000/api/usuarios"; // API de jugadores
 
-  // Función para seleccionar una imagen
-  Future<void> _pickImage() async {
-    final XFile? pickedImage =
-        await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = pickedImage;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _fetchPlayers();
+  }
+
+  Future<void> _fetchPlayers() async {
+    try {
+      var response = await http.get(Uri.parse(playersApiUrl));
+      if (response.statusCode == 200) {
+        List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          _allPlayers = data.map((player) {
+            return {
+              "id": player["_id"].toString(),
+              "nombre": player["nombre"].toString()
+            };
+          }).toList();
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al cargar la lista de jugadores')),
+      );
+    }
+  }
+
+  Future<void> _createGroup() async {
+    String groupName = _groupNameController.text;
+    String groupDescription = _groupDescriptionController.text;
+
+    if (groupName.isEmpty || groupDescription.isEmpty || _players.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Por favor, completa todos los campos')),
+      );
+      return;
+    }
+
+    try {
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "nombre": groupName,
+          "descripcion": groupDescription,
+          "integrantes": _players, // Enviar IDs de jugadores
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Grupo creado exitosamente')),
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al crear el grupo')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error de conexión con el servidor')),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Crear Nuevo Grupo",
-            style: GoogleFonts.sansita(color: Colors.white)),
-        backgroundColor: Color(0xFF19382F), // Color verde oscuro
+        title: Text("Crear Nuevo Grupo", style: GoogleFonts.sansita(color: Colors.white)),
+        backgroundColor: Color(0xFF19382F),
         iconTheme: IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
-        // Aseguramos que todo el contenido sea desplazable
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Opción para cargar una imagen desde el dispositivo
-              Center(
-                child: Text(
-                  "Cargar Imagen del Grupo",
-                  style: GoogleFonts.sansita(
-                    fontSize: 18,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Nombre del Grupo", style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            TextField(
+              controller: _groupNameController,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFF2A5B4E),
+                hintText: "Escribe el nombre del grupo",
+                hintStyle: GoogleFonts.sansita(color: Colors.white),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text("Descripción del Grupo", style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            TextField(
+              controller: _groupDescriptionController,
+              maxLines: 4,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color(0xFF2A5B4E),
+                hintText: "Escribe una breve descripción",
+                hintStyle: GoogleFonts.sansita(color: Colors.white),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+              ),
+            ),
+            SizedBox(height: 20),
+            Text("Seleccionar Jugadores", style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            Autocomplete<String>(
+              optionsBuilder: (TextEditingValue textEditingValue) {
+                if (textEditingValue.text.isEmpty) {
+                  return const Iterable<String>.empty();
+                }
+                return _allPlayers
+                    .where((player) => player["nombre"]!.toLowerCase().contains(textEditingValue.text.toLowerCase()))
+                    .map((player) => player["nombre"]!);
+              },
+              onSelected: (String selectedPlayer) {
+                setState(() {
+                  var player = _allPlayers.firstWhere((p) => p["nombre"] == selectedPlayer);
+                  if (!_players.contains(player["id"])) {
+                    _players.add(player["id"]!);
+                  }
+                });
+              },
+              fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+                return TextField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Color(0xFF2A5B4E),
+                    hintText: "Buscar jugador...",
+                    hintStyle: GoogleFonts.sansita(color: Colors.white),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
                   ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Center(
-                // Centramos el contenedor de la imagen
-                child: GestureDetector(
-                  onTap:
-                      _pickImage, // Llama a la función para seleccionar la imagen
-                  child: Container(
-                    height: 150,
-                    width: 150,
-                    decoration: BoxDecoration(
-                      color: Color(0xFF2A5B4E),
-                      shape: BoxShape.circle, // Hacemos la imagen circular
-                      border: Border.all(color: Colors.white),
-                    ),
-                    child: _image == null
-                        ? Center(
-                            child: Text(
-                              "Toca aquí para seleccionar una imagen",
-                              style: GoogleFonts.sansita(
-                                color: Colors.white,
-                              ),
-                            ),
-                          )
-                        : ClipOval(
-                            child: Image.file(
-                              File(_image!.path),
-                              fit: BoxFit.cover,
-                              height: 150,
-                              width: 150,
-                            ),
-                          ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-
-              // Nombre del Grupo
-              Text(
-                "Nombre del Grupo",
-                style: GoogleFonts.sansita(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: _groupNameController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xFF2A5B4E),
-                  hintText: "Escribe el nombre del grupo",
-                  hintStyle: GoogleFonts.sansita(color: Colors.white),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-
-              // Descripción del Grupo
-              Text(
-                "Descripción del Grupo",
-                style: GoogleFonts.sansita(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: _groupDescriptionController,
-                style: TextStyle(color: Colors.white),
-                maxLines: 4,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xFF2A5B4E),
-                  hintText: "Escribe una breve descripción",
-                  hintStyle: GoogleFonts.sansita(color: Colors.white),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-
-              // Agregar jugadores
-              Text(
-                "Agregar Jugadores",
-                style: GoogleFonts.sansita(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Color(0xFF2A5B4E),
-                  hintText: "Ingresa el nombre del jugador",
-                  hintStyle: GoogleFonts.sansita(color: Colors.white),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                onSubmitted: (playerName) {
-                  setState(() {
-                    if (playerName.isNotEmpty) {
-                      _players.add(playerName);
-                    }
-                  });
-                },
-              ),
-              SizedBox(height: 10),
-
-              // Lista de jugadores
-              _players.isNotEmpty
-                  ? Column(
-                      children: _players.map((player) {
-                        return ListTile(
-                          tileColor: Colors.grey.shade300, // Corrección aquí
-                          title: Text(
-                            player,
-                            style: TextStyle(
-                                color: Colors.black), // Cambia el texto a blanco para contraste
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.remove_circle, color: Colors.red),
-                            onPressed: () {
-                              setState(() {
-                                _players.remove(player);
-                              });
-                            },
-                          ),
-                        );
-                      }).toList(),
-                    )
-                  : Text("No hay jugadores agregados.",
-                      style:
-                          GoogleFonts.sansita(color: const Color(0xFF19382F))),
-
-              SizedBox(height: 30),
-
-              // Botón de acción
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    String groupName = _groupNameController.text;
-                    String groupDescription = _groupDescriptionController.text;
-
-                    if (groupName.isNotEmpty &&
-                        groupDescription.isNotEmpty &&
-                        _players.isNotEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Grupo creado: $groupName')),
+                );
+              },
+            ),
+            SizedBox(height: 10),
+            _players.isNotEmpty
+                ? Column(
+                    children: _players.map((playerId) {
+                      String playerName = _allPlayers.firstWhere((p) => p["id"] == playerId)["nombre"]!;
+                      return ListTile(
+                        tileColor: Colors.grey.shade300,
+                        title: Text(playerName, style: TextStyle(color: Colors.black)),
+                        trailing: IconButton(
+                          icon: Icon(Icons.remove_circle, color: Colors.red),
+                          onPressed: () {
+                            setState(() {
+                              _players.remove(playerId);
+                            });
+                          },
+                        ),
                       );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content:
-                                Text('Por favor, completa todos los campos')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 40, 84, 72),
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    "Crear Grupo",
-                    style:
-                        GoogleFonts.sansita(fontSize: 18, color: Colors.white),
-                  ),
+                    }).toList(),
+                  )
+                : Text("No hay jugadores agregados.", style: GoogleFonts.sansita(color: const Color(0xFF19382F))),
+            SizedBox(height: 30),
+            Center(
+              child: ElevatedButton(
+                onPressed: _createGroup,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 40, 84, 72),
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                 ),
+                child: Text("Crear Grupo", style: GoogleFonts.sansita(fontSize: 18, color: Colors.white)),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
