@@ -3,9 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutterapp/core/routes/routes.dart';
 
 class Groups extends StatelessWidget {
-  final List<String> _routes = [
-    Routes.newGroupPage, // Home// Eventos
-  ];
 
   @override
   Widget build(BuildContext context) {

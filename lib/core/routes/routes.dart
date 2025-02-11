@@ -18,7 +18,6 @@ class Routes {
   static const logout = '/logout';
   static const registration = '/registration';
   static const settings = '/settings';
-  static const locals = '/locals';
   static const events = '/events';
   static const groups = '/groups';
   static const newGroupPage = '/newGroup';

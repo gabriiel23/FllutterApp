@@ -21,11 +21,11 @@ class _LoginPageState extends State<LoginPage> {
   void _login() {
     // Compara el correo y la contraseña con el usuario temporal
     if (_emailController.text == tempEmail && _passwordController.text == tempPassword) {
-      print('Iniciando sesión como usuario temporal');
+      // print('Iniciando sesión como usuario temporal');
       Navigator.pushNamed(context, Routes.home); // Redirige al home
     } else {
       // Si no coincide, muestra un mensaje de error
-      print('Credenciales incorrectas');
+      // print('Credenciales incorrectas');
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
