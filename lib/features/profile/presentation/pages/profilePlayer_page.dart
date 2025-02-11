@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProfilePlayerPage extends StatefulWidget {
   @override
@@ -19,6 +21,40 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
     'Físico': 5,
     'Reflejos': 5,
   };
+
+  final String apiUrl = "http://localhost:3000/api/jugadores"; // Cambia según tu backend
+
+  Future<void> saveProfile() async {
+    if (selectedRole == null) return;
+
+    Map<String, dynamic> playerData = {
+      "posicion": selectedRole,
+      "estatura": height.toInt(),
+      "edad": age,
+      "atributos": attributes,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(playerData),
+      );
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Perfil guardado correctamente")),
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        throw Exception("Error al guardar perfil");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +107,7 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
             if (selectedRole != null)
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Guardar perfil
-                  },
+                  onPressed: saveProfile,
                   child: Text('Guardar Perfil', style: GoogleFonts.sansita(fontSize: 18)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF19382F),
@@ -102,7 +136,7 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
           value: height,
           min: 140,
           max: 210,
-          divisions: 60,
+          divisions: 70,
           label: height.toInt().toString(),
           onChanged: (value) {
             setState(() {
@@ -115,7 +149,7 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
           value: age.toDouble(),
           min: 10,
           max: 70,
-          divisions: 40,
+          divisions: 60,
           label: age.toString(),
           onChanged: (value) {
             setState(() {
