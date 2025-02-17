@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     // Redirige automáticamente a la página principal después de 4 segundos
     Future.delayed(const Duration(seconds: 4)).then(
-      (_) => Navigator.pushReplacementNamed(context, Routes.home), // Navegación a la pantalla principal
+      (_) => Navigator.pushReplacementNamed(context, Routes.login), // Navegación a la pantalla principal
     );
   }
 

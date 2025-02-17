@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/core/routes/navegation/navigationBar.dart';
 import 'package:flutterapp/features/canchas/presentation/pages/newCancha_page.dart';
 
 import 'package:flutterapp/features/comunity/presentation/pages/groups_page.dart';
@@ -10,7 +11,7 @@ import 'package:flutterapp/features/profile/presentation/pages/profile_page.dart
 
 import 'package:flutterapp/features/registerUser/presentation/pages/login_page.dart';
 import 'package:flutterapp/features/registerUser/presentation/pages/logout_page.dart';
-import 'package:flutterapp/core/routes/navegation/navigationBar.dart';
+// import 'package:flutterapp/core/routes/navegation/navigationBar.dart';
 import 'package:flutterapp/features/comunity/presentation/pages/newGroup_page.dart';
 import 'package:flutterapp/features/reserves/presentation/pages/newReserve_page.dart';
 import 'package:flutterapp/features/payment/presentation/pages/payment_page.dart';
@@ -22,11 +23,11 @@ import 'routes.dart';
 Map<String, Widget Function(BuildContext)> get appRoutes {
   return {
     // Rutas principales con BottomNavigationBar
+    Routes.login: (_) => const LoginPage(),
     Routes.home: (_) => const MainScreen(),
 
     // Rutas secundarias sin BottomNavigationBar
     Routes.splash: (_) => SplashScreen(),
-    Routes.login: (_) => LoginPage(),
     Routes.logout: (_) => LogoutPage(),
     Routes.registration: (_) => RegistrationPage(),
     Routes.profile: (_) => ProfilePage(),

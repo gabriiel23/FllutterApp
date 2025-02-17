@@ -15,8 +15,8 @@ class _LoginPageState extends State<LoginPage> {
   bool _isPasswordVisible = false;
 
   // Usuario temporal predefinido
-  final String tempEmail = "messi@gmail.com";
-  final String tempPassword = "12345";
+  final String tempEmail = "admin";
+  final String tempPassword = "admin";
 
   void _login() {
     // Compara el correo y la contraseña con el usuario temporal

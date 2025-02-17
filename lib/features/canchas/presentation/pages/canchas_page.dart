@@ -4,6 +4,7 @@ import 'package:flutterapp/core/routes/routes.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import '../widgets/geolocation_widget.dart';
 
 class Canchas extends StatefulWidget {
   const Canchas({super.key});
@@ -40,7 +41,6 @@ class _CanchasState extends State<Canchas> {
       setState(() {
         _isLoading = false;
       });
-      // print("Error: $e");
     }
   }
 
@@ -126,13 +126,38 @@ class _CanchasState extends State<Canchas> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on, color: Colors.green, size: 20),
-                        const SizedBox(width: 8.0),
-                        Text(local['direccion'] ?? 'Dirección no disponible',
-                            style: const TextStyle(color: Colors.green)),
-                      ],
+                    GestureDetector(
+                      onTap: () {
+                        if (local['latitud'] != null && local['longitud'] != null) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: SizedBox(
+                                width: double.maxFinite,
+                                height: 300,
+                                child: GeolocationWidget(
+                                  latitude: local['latitud'],
+                                  longitude: local['longitud'],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          const Icon(Icons.location_on, color: Colors.green, size: 20),
+                          const SizedBox(width: 8.0),
+                          Text(
+                            local['direccion'] ?? 'Dirección no disponible',
+                            style: const TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 10),
                     Text(
@@ -154,53 +179,6 @@ class _CanchasState extends State<Canchas> {
                         Text(
                           rating.toStringAsFixed(1),
                           style: const TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Servicios Disponibles",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                        const SizedBox(height: 5),
-                        Wrap(
-                          spacing: 10,
-                          children: servicios.map((servicio) {
-                            return Chip(
-                              label: Text(servicio, style: TextStyle(color: Colors.white)),
-                              backgroundColor: Colors.green,
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.pushNamed(context, Routes.newReservePage);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                          ),
-                          icon: const Icon(Icons.event_available, color: Colors.black),
-                          label: const Text(
-                            'Reservar este espacio',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
                         ),
                       ],
                     ),

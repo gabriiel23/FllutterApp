@@ -7,7 +7,8 @@ import 'theme/theme_provider.dart';
 void main() => runApp(
   
   ChangeNotifierProvider(
-    create: (context) => ThemeProvider(),
+    create: (context
+    ) => ThemeProvider(),
     child: const MyApp(),
   ),
 );

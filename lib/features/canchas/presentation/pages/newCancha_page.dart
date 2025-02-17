@@ -20,15 +20,24 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
   XFile? _image;
   final ImagePicker _picker = ImagePicker();
 
-  List<String> tiposServicios = ['sintética', 'básquet', 'vóley', 'fútbol', 'tenis', 'piscina', 'otros'];
+  List<String> tiposServicios = [
+    'sintética',
+    'básquet',
+    'vóley',
+    'fútbol',
+    'tenis',
+    'piscina',
+    'otros'
+  ];
 
   Future<void> _pickImage() async {
-    final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       _image = pickedImage;
     });
   }
-  
+
   Future<void> _crearCancha() async {
     if (_canchaNameController.text.isEmpty ||
         _canchaDescriptionController.text.isEmpty ||
@@ -39,7 +48,7 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
     }
 
     var url = Uri.parse('http://localhost:3000/api/canchas');
-    
+
     Map<String, dynamic> canchaData = {
       "nombre": _canchaNameController.text,
       "direccion": _canchaDireccionController.text,
@@ -66,7 +75,8 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
         _mostrarAlerta('Error', 'No se pudo crear la cancha.');
       }
     } catch (error) {
-      _mostrarAlerta('Error de conexión', 'No se pudo conectar con el servidor.');
+      _mostrarAlerta(
+          'Error de conexión', 'No se pudo conectar con el servidor.');
     }
   }
 
@@ -94,7 +104,8 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Crear Nueva Cancha", style: GoogleFonts.sansita(color: Colors.white)),
+        title: Text("Crear Nueva Cancha",
+            style: GoogleFonts.sansita(color: Colors.white)),
         backgroundColor: Color(0xFF19382F),
         iconTheme: IconThemeData(color: Colors.white),
       ),
@@ -139,7 +150,8 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
               SizedBox(height: 20),
               _buildTextField("Dirección", _canchaDireccionController),
               SizedBox(height: 20),
-              _buildTextField("Descripción", _canchaDescriptionController, maxLines: 4),
+              _buildTextField("Descripción", _canchaDescriptionController,
+                  maxLines: 4),
               SizedBox(height: 20),
               _buildRatingBar(),
               SizedBox(height: 20),
@@ -156,7 +168,9 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
                     backgroundColor: Color(0xFF285448),
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                   ),
-                  child: Text("Crear Cancha", style: GoogleFonts.sansita(fontSize: 18, color: Colors.white)),
+                  child: Text("Crear Cancha",
+                      style: GoogleFonts.sansita(
+                          fontSize: 18, color: Colors.white)),
                 ),
               ),
               SizedBox(height: 30),
@@ -166,11 +180,15 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
       ),
     );
   }
-    Widget _buildDropdown(String label, List<String> options, Function(String?) onChanged) {
+
+  Widget _buildDropdown(
+      String label, List<String> options, Function(String?) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(label,
+            style:
+                GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
         SizedBox(height: 10),
         DropdownButtonFormField<String>(
           decoration: InputDecoration(
@@ -182,7 +200,8 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
           items: options.map((String option) {
             return DropdownMenuItem<String>(
               value: option,
-              child: Text(option, style: GoogleFonts.sansita(color: Colors.black)),
+              child:
+                  Text(option, style: GoogleFonts.sansita(color: Colors.black)),
             );
           }).toList(),
           onChanged: onChanged,
@@ -191,20 +210,26 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
     );
   }
 
-
-  Widget _buildTextField(String label, TextEditingController controller, {int maxLines = 1}) {
+  Widget _buildTextField(String label, TextEditingController controller,
+      {int maxLines = 1}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(label,
+            style:
+                GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
         SizedBox(height: 10),
         TextField(
           controller: controller,
           maxLines: maxLines,
+          style: TextStyle(
+              color: Colors.white), // Hace que el texto escrito sea blanco
           decoration: InputDecoration(
             filled: true,
             fillColor: Color(0xFF2A5B4E),
             hintText: "Escribe $label",
+            hintStyle:
+                TextStyle(color: Colors.grey.shade200), // Color blanco para el hintText
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
@@ -216,7 +241,9 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Calificación", style: GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text("Calificación",
+            style:
+                GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
         SizedBox(height: 10),
         RatingBar.builder(
           initialRating: _canchaRating,
