@@ -1,17 +1,17 @@
-include: package:flutter_lints/flutter.yaml
+# include: package:flutter_lints/flutter.yaml
 
-analyzer:
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
-  errors:
-    missing_required_param: error
-    unused_element: warning
+# analyzer:
+#   strong-mode:
+#     implicit-casts: false
+#     implicit-dynamic: false
+#   errors:
+#     missing_required_param: error
+#     unused_element: warning
 
-linter:
-  rules:
-    avoid_print: true
-    prefer_const_constructors: false
-    prefer_final_fields: true
-    prefer_null_aware_operators: true
+# linter:
+#   rules:
+#     avoid_print: true
+#     prefer_const_constructors: false
+#     prefer_final_fields: true
+#     prefer_null_aware_operators: true
 

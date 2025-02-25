@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutterapp/core/routes/routes.dart';
+import 'package:flutterapp/services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,35 +14,49 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
 
-  // Usuario temporal predefinido
-  final String tempEmail = "messi@gmail.com";
-  final String tempPassword = "12345";
+  final AuthService _authService = AuthService();
 
-  void _login() {
-    // Compara el correo y la contraseña con el usuario temporal
-    if (_emailController.text == tempEmail && _passwordController.text == tempPassword) {
-      // print('Iniciando sesión como usuario temporal');
-      Navigator.pushNamed(context, Routes.home); // Redirige al home
-    } else {
-      // Si no coincide, muestra un mensaje de error
-      // print('Credenciales incorrectas');
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text('El correo o la contraseña son incorrectos.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('Cerrar'),
-            ),
-          ],
-        ),
+  void _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final response = await _authService.loginUser(
+        _emailController.text,
+        _passwordController.text,
       );
+      
+      if (response.containsKey('token')) {
+        Navigator.pushNamed(context, Routes.home);
+      } else {
+        _showErrorDialog("Credenciales incorrectas");
+      }
+    } catch (e) {
+      _showErrorDialog(e.toString());
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cerrar'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -49,14 +64,10 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Fondo con degradado
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  const Color(0xFF19382F),
-                  const Color.fromARGB(255, 41, 92, 78),
-                ],
+                colors: [Color(0xFF19382F), Color.fromARGB(255, 41, 92, 78)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -69,34 +80,20 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Logo
                   Hero(
                     tag: 'logo',
-                    child: Icon(
-                      Icons.sports_soccer,
-                      size: 100,
-                      color: Colors.white,
-                    ),
+                    child: Icon(Icons.sports_soccer, size: 100, color: Colors.white),
                   ),
-                  const SizedBox(height: 20),
-                  // Título
+                  SizedBox(height: 20),
                   Text(
                     'Inicia Sesión',
                     style: GoogleFonts.sansita(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          offset: const Offset(2, 2),
-                          blurRadius: 3,
-                          color: Colors.black26,
-                        ),
-                      ],
                     ),
                   ),
-                  const SizedBox(height: 40),
-                  // Campo de correo electrónico
+                  SizedBox(height: 40),
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -104,16 +101,14 @@ class _LoginPageState extends State<LoginPage> {
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Correo electrónico',
-                      prefixIcon: const Icon(Icons.email, color: Colors.black),
+                      prefixIcon: Icon(Icons.email, color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    style: GoogleFonts.sansita(),
                   ),
-                  const SizedBox(height: 20),
-                  // Campo de contraseña
+                  SizedBox(height: 20),
                   TextField(
                     controller: _passwordController,
                     obscureText: !_isPasswordVisible,
@@ -121,12 +116,10 @@ class _LoginPageState extends State<LoginPage> {
                       filled: true,
                       fillColor: Colors.white,
                       hintText: 'Contraseña',
-                      prefixIcon: const Icon(Icons.lock, color: Colors.black),
+                      prefixIcon: Icon(Icons.lock, color: Colors.black),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
+                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                           color: Colors.black,
                         ),
                         onPressed: () {
@@ -140,39 +133,31 @@ class _LoginPageState extends State<LoginPage> {
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    style: GoogleFonts.sansita(),
                   ),
-                  const SizedBox(height: 40),
-                  // Botón de inicio de sesión
-                  ElevatedButton(
-                    onPressed: _login, // Llama a la función de login
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 16,
-                      ),
-                      backgroundColor: const Color(0xFF19382F),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                    child: Text(
-                      'Iniciar Sesión',
-                      style: GoogleFonts.sansita(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  // Opción de registro
+                  SizedBox(height: 40),
+                  _isLoading
+                      ? CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: _login,
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                            backgroundColor: Color(0xFF19382F),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: Text(
+                            'Iniciar Sesión',
+                            style: GoogleFonts.sansita(fontSize: 18, color: Colors.white),
+                          ),
+                        ),
+                  SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
-                      // Navegar a la ruta de registro
                       Navigator.pushNamed(context, Routes.registration);
                     },
                     child: Row(
-                      mainAxisSize: MainAxisSize.min, // Esto ajusta el tamaño del Row al contenido
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           '¿No tienes cuenta?  ',
@@ -183,9 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         Text(
                           'Registrate',
-                          style: GoogleFonts.sansita(
-                            color: Colors.blue,
-                          ),
+                          style: GoogleFonts.sansita(color: Colors.blue),
                         ),
                       ],
                     ),

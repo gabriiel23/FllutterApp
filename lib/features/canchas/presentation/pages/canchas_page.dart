@@ -4,6 +4,7 @@ import 'package:flutterapp/core/routes/routes.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Importar SharedPreferences
 
 class Canchas extends StatefulWidget {
   const Canchas({super.key});
@@ -15,6 +16,7 @@ class Canchas extends StatefulWidget {
 class _CanchasState extends State<Canchas> {
   List<Map<String, dynamic>> _locales = [];
   bool _isLoading = true;
+  String _userRole = ""; // Variable para almacenar el rol del usuario
   final String apiUrl = "http://localhost:3000/api/canchas";
   String baseUrl = "http://localhost:3000/";
 
@@ -22,8 +24,18 @@ class _CanchasState extends State<Canchas> {
   void initState() {
     super.initState();
     _fetchCanchas();
+    _loadUserRole(); // Cargar el rol del usuario
   }
 
+  /// Obtener el rol del usuario desde SharedPreferences
+  Future<void> _loadUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userRole = prefs.getString('userRol') ?? ""; // Obtener el rol guardado
+    });
+  }
+
+  /// Obtener la lista de canchas desde la API
   Future<void> _fetchCanchas() async {
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -40,7 +52,6 @@ class _CanchasState extends State<Canchas> {
       setState(() {
         _isLoading = false;
       });
-      // print("Error: $e");
     }
   }
 
@@ -67,16 +78,21 @@ class _CanchasState extends State<Canchas> {
                 ? const Center(child: Text("No hay canchas disponibles"))
                 : _buildCanchasList(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, Routes.newCanchaPage);
-        },
-        backgroundColor: const Color(0xFF19382F),
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
+      
+      // Mostrar el botón solo si el usuario es "dueño"
+      floatingActionButton: _userRole == "dueño"
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.newCanchaPage);
+              },
+              backgroundColor: const Color(0xFF19382F),
+              child: const Icon(Icons.add, color: Colors.white),
+            )
+          : null, // Si no es dueño, el botón no se muestra
     );
   }
 
+  /// Construcción de la lista de canchas
   Widget _buildCanchasList() {
     return ListView.builder(
       itemCount: _locales.length,
