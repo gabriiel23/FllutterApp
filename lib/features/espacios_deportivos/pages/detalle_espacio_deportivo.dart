@@ -27,17 +27,15 @@ class _DetalleEspacioDeportivoPageState
     _loadEspacioId();
   }
 
-  // Cargar espacio_id desde SharedPreferences
   Future<void> _loadEspacioId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     espacioId = prefs.getString('espacio_id') ?? '';
     _fetchServicios();
   }
 
-  // Obtener los servicios del espacio deportivo
   Future<void> _fetchServicios() async {
-    final response = await http.get(Uri.parse(
-        'http://localhost:3000/api/$espacioId')); // Ajusta esta URL según tu API
+    final response =
+        await http.get(Uri.parse('http://localhost:3000/api/$espacioId'));
 
     if (response.statusCode == 200) {
       setState(() {
@@ -55,8 +53,9 @@ class _DetalleEspacioDeportivoPageState
   @override
   Widget build(BuildContext context) {
     String baseUrl = 'http://localhost:3000';
-    String imageUrl =
-        widget.espacio['imagen'] != null ? '$baseUrl${widget.espacio['imagen']}' : '';
+    String imageUrl = widget.espacio['imagen'] != null
+        ? '$baseUrl${widget.espacio['imagen']}'
+        : '';
 
     return Scaffold(
       appBar: AppBar(
@@ -86,11 +85,11 @@ class _DetalleEspacioDeportivoPageState
               SizedBox(height: 20),
               _buildDetailRow("Ubicación:", widget.espacio['ubicacion']),
               _buildDetailRow("Descripción:", widget.espacio['descripcion']),
-              _buildDetailRow("Propietario:", widget.espacio['propietario']?['nombre']),
-              _buildDetailRow("Email del Propietario:", widget.espacio['propietario']?['email']),
+              _buildDetailRow(
+                  "Propietario:", widget.espacio['propietario']?['nombre']),
+              _buildDetailRow("Email del Propietario:",
+                  widget.espacio['propietario']?['email']),
               SizedBox(height: 20),
-              
-              // Mostrar servicios
               isLoading
                   ? Center(child: CircularProgressIndicator())
                   : ListView.builder(
@@ -99,9 +98,27 @@ class _DetalleEspacioDeportivoPageState
                       itemCount: servicios.length,
                       itemBuilder: (context, index) {
                         var servicio = servicios[index];
-                        return ListTile(
-                          title: Text(servicio['nombre'] ?? 'Servicio no disponible'),
-                          subtitle: Text(servicio['descripcion'] ?? 'Descripción no disponible'),
+                        return Card(
+                          elevation: 3,
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          child: ListTile(
+                            title: Text(
+                                servicio['nombre'] ?? 'Servicio no disponible'),
+                            subtitle: Text(servicio['descripcion'] ??
+                                'Descripción no disponible'),
+                            trailing: ElevatedButton(
+                              onPressed: () async {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.setString('servicio_id',
+                                    servicio['_id']); // Guardar ID del servicio
+                                    print("ID del servicio guardado: ${servicio['_id']}");
+
+                                Navigator.pushNamed(context, '/newReserve');
+                              },
+                              child: Text("Reservar"),
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -131,8 +148,7 @@ class _DetalleEspacioDeportivoPageState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style:
-                GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold)),
+            style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold)),
         Text(value ?? "No disponible", style: GoogleFonts.lato(fontSize: 16)),
         SizedBox(height: 10),
       ],

@@ -26,15 +26,16 @@ class _ListaEspaciosDeportivosPageState
     mostrarDatosSharedPreferences(); // Llamar la función al iniciar la pantalla
   }
 
-  Future<void> obtenerEspaciosDeportivos() async {
-    try {
-      final response =
-          await http.get(Uri.parse('$baseUrl/api/espacios-deportivos'));
+Future<void> obtenerEspaciosDeportivos() async {
+  try {
+    final response =
+        await http.get(Uri.parse('$baseUrl/api/espacios-deportivos'));
 
-      if (response.statusCode == 200) {
-        final decodedData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      final decodedData = json.decode(response.body);
+      if (mounted) {
         setState(() {
-          if (decodedData is List) {
+          if (decodedData is List) {  
             espacios = decodedData;
           } else if (decodedData is Map && decodedData.containsKey('data')) {
             espacios = decodedData['data'];
@@ -43,19 +44,25 @@ class _ListaEspaciosDeportivosPageState
           }
           isLoading = false;
         });
-      } else {
+      }
+    } else {
+      if (mounted) {
         setState(() {
           hasError = true;
           isLoading = false;
         });
       }
-    } catch (e) {
+    }
+  } catch (e) {
+    if (mounted) {
       setState(() {
         hasError = true;
         isLoading = false;
       });
     }
   }
+}
+
 
   Future<void> guardarEspacioSeleccionado(String id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

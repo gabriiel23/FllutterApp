@@ -1,0 +1,2 @@
+C:/Users/Usuario iTC/Desktop/canchapp/FllutterApp/android/app/.cxx/Debug/r1t3t2f3/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/Usuario iTC/Desktop/canchapp/FllutterApp/android/app/.cxx/Debug/r1t3t2f3/x86_64/CMakeFiles/rebuild_cache.dir

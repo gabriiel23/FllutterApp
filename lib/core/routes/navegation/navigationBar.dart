@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/features/home_admin/presentation/pages/homeAdmin_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutterapp/features/comunity/presentation/pages/groups_page.dart';
 import 'package:flutterapp/features/home/presentation/pages/home_page.dart';
@@ -33,7 +34,7 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Widget> _buildPages() {
     return [
-      Home(),
+      _userRol == 'dueño' ? HomeAdminPage() : Home(),
       _userRol == 'dueño' ? ListaEspaciosAdminDeportivosPage() : ListaEspaciosDeportivosPage(),
       Groups(),
       Reserves(),
