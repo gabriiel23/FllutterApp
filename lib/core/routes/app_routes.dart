@@ -18,6 +18,7 @@ import 'package:flutterapp/features/payment/presentation/pages/payment_page.dart
 import 'package:flutterapp/features/registerUser/presentation/pages/registration_page.dart';
 import 'package:flutterapp/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutterapp/features/home/presentation/pages/splash_page.dart';
+import 'package:flutterapp/features/home_admin/presentation/pages/homeAdmin_page.dart';
 import 'routes.dart';
 
 Map<String, Widget Function(BuildContext)> get appRoutes {
@@ -40,6 +41,7 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.payment: (_) => PaymentPage(),
     Routes.newCanchaPage: (_) => NewCanchaPage(),
     Routes.profilePlayer: (_) => ProfilePlayerPage(),
+    Routes.homeAdmin: (_) => HomeAdminPage(),
 
 
 
