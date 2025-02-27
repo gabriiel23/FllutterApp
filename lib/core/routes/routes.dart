@@ -8,7 +8,8 @@ class Routes {
 
   // Rutas principales (con BottomNavigationBar)
   static const home = '/home';
-  static const cancha = '/cancha';
+  // static const cancha = '/cancha';
+  static const espacio = '/espacio';
   static const profile = '/profile';
   static const reserves = '/reserves';
 
@@ -21,9 +22,12 @@ class Routes {
   static const events = '/events';
   static const groups = '/groups';
   static const newGroupPage = '/newGroup';
-  static const canchas = '/cachas';
+  // static const canchas = '/cachas';
+  static const espacios = '/espacios';
+  static const espaciosAdmin = '/espacios_admin';
   static const newReservePage = '/newReserve';
   static const payment = '/payment';
   static const newCanchaPage = '/newCancha';
+  static const newEspacioPage = '/newEspacio';
   static const profilePlayer = '/profilePlayer';
 }

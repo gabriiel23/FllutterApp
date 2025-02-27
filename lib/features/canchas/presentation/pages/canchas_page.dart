@@ -83,7 +83,7 @@ class _CanchasState extends State<Canchas> {
       floatingActionButton: _userRole == "dueño"
           ? FloatingActionButton(
               onPressed: () {
-                Navigator.pushNamed(context, Routes.newCanchaPage);
+                Navigator.pushNamed(context, Routes.newEspacioPage);
               },
               backgroundColor: const Color(0xFF19382F),
               child: const Icon(Icons.add, color: Colors.white),

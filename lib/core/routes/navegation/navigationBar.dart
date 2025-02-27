@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutterapp/features/comunity/presentation/pages/groups_page.dart';
 import 'package:flutterapp/features/home/presentation/pages/home_page.dart';
-import 'package:flutterapp/features/canchas/presentation/pages/canchas_page.dart';
+import 'package:flutterapp/features/espacios_deportivos/pages/espacios_page.dart';
+import 'package:flutterapp/features/espacios_deportivos/pages/espacios_admin.page.dart';
 import 'package:flutterapp/features/reserves/presentation/pages/reserves_page.dart';
 import 'package:flutterapp/features/profile/presentation/pages/profile_page.dart';
 
@@ -14,18 +16,34 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  String? _userRol;
 
-  final List<Widget> _pages = [
-    Home(),
-    Canchas(),
-    Groups(),
-    Reserves(),
-    ProfilePage(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadUserRole();
+  }
+
+  Future<void> _loadUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userRol = prefs.getString('userRol') ?? 'jugador';
+    });
+  }
+
+  List<Widget> _buildPages() {
+    return [
+      Home(),
+      _userRol == 'dueño' ? ListaEspaciosAdminDeportivosPage() : ListaEspaciosDeportivosPage(),
+      Groups(),
+      Reserves(),
+      ProfilePage(),
+    ];
+  }
 
   final List<String> _labels = [
     'Inicio',
-    'Canchas',
+    'Espacios',
     'Comunidad',
     'Tus reservas',
     'Perfil'
@@ -50,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: _pages,
+        children: _buildPages(),
       ),
       bottomNavigationBar: BottomAppBar(
         color: const Color(0xFF19382F),

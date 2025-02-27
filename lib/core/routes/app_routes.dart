@@ -18,6 +18,10 @@ import 'package:flutterapp/features/payment/presentation/pages/payment_page.dart
 import 'package:flutterapp/features/registerUser/presentation/pages/registration_page.dart';
 import 'package:flutterapp/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutterapp/features/home/presentation/pages/splash_page.dart';
+import 'package:flutterapp/features/espacios_deportivos/pages/newEspacio.dart';
+import 'package:flutterapp/features/espacios_deportivos/pages/espacios_page.dart';
+import 'package:flutterapp/features/espacios_deportivos/pages/espacios_admin.page.dart';
+
 
 import 'routes.dart';
 
@@ -60,13 +64,15 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.newGroupPage: (_) => NewGroupPage(),
     Routes.groups: (_) => Groups(),
     Routes.reserves: (_) => Reserves(),
-    Routes.canchas: (_) => Canchas(),
+    Routes.espacios: (_) => roleGuard(ListaEspaciosDeportivosPage(), "jugador"),
+    Routes.espaciosAdmin: (_) => roleGuard(ListaEspaciosAdminDeportivosPage(), "dueño"),
     Routes.newReservePage: (_) => NewReservePage(),
     Routes.payment: (_) => PaymentPage(),
     Routes.profilePlayer: (_) => ProfilePlayerPage(),
 
     // Rutas con restricción de acceso
     Routes.newCanchaPage: (_) => roleGuard(NewCanchaPage(), "dueño"), // Solo accesible para "dueño"
+    Routes.newEspacioPage: (_) => roleGuard(CrearEspacioDeportivoPage(), "dueño"), // Solo accesible para "dueño"
 
     // Otra ruta
     Routes.events: (_) => const Home(),
