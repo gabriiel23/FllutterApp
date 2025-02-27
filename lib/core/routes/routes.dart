@@ -30,4 +30,6 @@ class Routes {
   static const newCanchaPage = '/newCancha';
   static const newEspacioPage = '/newEspacio';
   static const profilePlayer = '/profilePlayer';
+  static const homeAdmin = '/homeAdmin';
 }
+

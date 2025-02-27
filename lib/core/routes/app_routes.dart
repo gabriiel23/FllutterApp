@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:flutterapp/core/routes/navegation/navigationBar.dart';
+import 'package:flutterapp/features/canchas/presentation/pages/newCancha_page.dart';
+
 
 import 'package:flutterapp/features/canchas/presentation/pages/newCancha_page.dart';
 import 'package:flutterapp/features/comunity/presentation/pages/groups_page.dart';
@@ -11,17 +16,21 @@ import 'package:flutterapp/features/profile/presentation/pages/profile_page.dart
 
 import 'package:flutterapp/features/registerUser/presentation/pages/login_page.dart';
 import 'package:flutterapp/features/registerUser/presentation/pages/logout_page.dart';
-import 'package:flutterapp/core/routes/navegation/navigationBar.dart';
+// import 'package:flutterapp/core/routes/navegation/navigationBar.dart';
 import 'package:flutterapp/features/comunity/presentation/pages/newGroup_page.dart';
 import 'package:flutterapp/features/reserves/presentation/pages/newReserve_page.dart';
 import 'package:flutterapp/features/payment/presentation/pages/payment_page.dart';
 import 'package:flutterapp/features/registerUser/presentation/pages/registration_page.dart';
 import 'package:flutterapp/features/settings/presentation/pages/settings_page.dart';
 import 'package:flutterapp/features/home/presentation/pages/splash_page.dart';
+
 import 'package:flutterapp/features/espacios_deportivos/pages/newEspacio.dart';
 import 'package:flutterapp/features/espacios_deportivos/pages/espacios_page.dart';
 import 'package:flutterapp/features/espacios_deportivos/pages/espacios_admin.page.dart';
 
+
+
+import 'package:flutterapp/features/home_admin/presentation/pages/homeAdmin_page.dart';
 
 import 'routes.dart';
 
@@ -52,11 +61,11 @@ Widget roleGuard(Widget page, String requiredRole) {
 Map<String, Widget Function(BuildContext)> get appRoutes {
   return {
     // Rutas principales con BottomNavigationBar
+    Routes.login: (_) => const LoginPage(),
     Routes.home: (_) => const MainScreen(),
 
     // Rutas sin restricciones
     Routes.splash: (_) => SplashScreen(),
-    Routes.login: (_) => LoginPage(),
     Routes.logout: (_) => LogoutPage(),
     Routes.registration: (_) => RegistrationPage(),
     Routes.profile: (_) => ProfilePage(),
@@ -69,6 +78,7 @@ Map<String, Widget Function(BuildContext)> get appRoutes {
     Routes.newReservePage: (_) => NewReservePage(),
     Routes.payment: (_) => PaymentPage(),
     Routes.profilePlayer: (_) => ProfilePlayerPage(),
+    Routes.homeAdmin: (_) => HomeAdminPage(),
 
     // Rutas con restricción de acceso
     Routes.newCanchaPage: (_) => roleGuard(NewCanchaPage(), "dueño"), // Solo accesible para "dueño"
