@@ -17,29 +17,30 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     Home(),
-    Canchas(),
     Groups(),
+    Canchas(),
     Reserves(),
     ProfilePage(),
   ];
 
   final List<String> _labels = [
     'Inicio',
-    'Canchas',
     'Comunidad',
+    '',
     'Tus reservas',
     'Perfil'
   ];
 
   final List<IconData> _icons = [
     Icons.home,
-    Icons.location_on,
     Icons.group,
+    Icons.location_on, // Icono del botón flotante
     Icons.history_outlined,
     Icons.person_pin,
   ];
 
   void _onItemTapped(int index) {
+    if (index == 2) return; // Ignorar la selección del botón flotante
     setState(() {
       _currentIndex = index;
     });
@@ -52,35 +53,62 @@ class _MainScreenState extends State<MainScreen> {
         index: _currentIndex,
         children: _pages,
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: const Color(0xFF19382F),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(5, (index) {
-              return InkWell(
-                onTap: () => _onItemTapped(index),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      _icons[index],
-                      size: 22,
-                      color: _currentIndex == index ? Colors.white : Colors.grey,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _currentIndex = 2;
+          });
+        },
+        backgroundColor: Colors.green,
+        shape: const CircleBorder(),
+        mini: false, // ✅ Hace el FAB más pequeño
+        child: const Icon(Icons.location_on, color: Colors.white, size: 24),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
+        ),
+        child: BottomAppBar(
+          shape: const CircularNotchedRectangle(),
+          notchMargin: 8.0, // ✅ Más espacio alrededor del FAB
+          color: const Color(0xFF19382F),
+          elevation: 10,
+          child: SizedBox(
+            height: 56, // ✅ Evita el overflow
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2.0), // ✅ Espacio extra
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: List.generate(5, (index) {
+                  if (index == 2) {
+                    return const SizedBox(width: 48); // Espacio para el FAB
+                  }
+                  return GestureDetector(
+                    onTap: () => _onItemTapped(index),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          _icons[index],
+                          size: 24, // ✅ Tamaño más compacto
+                          color: _currentIndex == index ? Colors.white : Colors.grey,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _labels[index],
+                          style: TextStyle(
+                            color: _currentIndex == index ? Colors.white : Colors.grey,
+                            fontSize: 11, // ✅ Fuente más pequeña
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      _labels[index],
-                      style: TextStyle(
-                        color: _currentIndex == index ? Colors.white : Colors.grey,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
+                  );
+                }),
+              ),
+            ),
           ),
         ),
       ),

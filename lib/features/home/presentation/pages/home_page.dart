@@ -242,7 +242,7 @@ class _HomeState extends State<Home> {
                 Column(
                   children: [
                     Text(
-                      "Novedades",
+                      "❓ Novedades",
                       style: GoogleFonts.sansita(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -271,7 +271,7 @@ class _HomeState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "🎯 Cancha El Campus Loja",
+                            "Cancha El Campus Loja",
                             style: GoogleFonts.sansita(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -336,7 +336,7 @@ class _HomeState extends State<Home> {
                 Column(
                   children: [
                     Text(
-                      "Eventos",
+                      "🗓️ Eventos",
                       style: GoogleFonts.sansita(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -365,7 +365,7 @@ class _HomeState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "🎯 Cancha El Fortín",
+                            "Cancha El Fortín",
                             style: GoogleFonts.sansita(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
