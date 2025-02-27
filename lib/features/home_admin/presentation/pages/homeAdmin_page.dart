@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutterapp/core/routes/routes.dart';
 
 class HomeAdminPage extends StatefulWidget {
   @override
@@ -26,8 +27,17 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
 
   // Reservas (usando fechas normalizadas)
   Map<DateTime, List<String>> reservations = {
-    normalizeDate(DateTime(2025, 2, 26)): ['Reserva 1', 'Reserva 2', 'Reserva 3', 'Reserva 4'],
-    normalizeDate(DateTime(2025, 2, 27)): ['Reserva 5', 'Reserva 6', 'Reserva 7'],
+    normalizeDate(DateTime(2025, 2, 26)): [
+      'Reserva 1',
+      'Reserva 2',
+      'Reserva 3',
+      'Reserva 4'
+    ],
+    normalizeDate(DateTime(2025, 2, 27)): [
+      'Reserva 5',
+      'Reserva 6',
+      'Reserva 7'
+    ],
   };
 
   @override
@@ -36,13 +46,13 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(40.0),
+        preferredSize: const Size.fromHeight(40.0),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                const Color(0xFF19382F),
-                const Color.fromARGB(255, 38, 94, 78),
+                Color(0xFF19382F),
+                Color.fromARGB(255, 38, 94, 78),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -50,12 +60,43 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
-            leading: IconButton(
-              icon: Icon(Icons.menu, color: Colors.white),
-              onPressed: () {
-                // Acción del menú
-              },
-            ),
+            elevation: 0,
+            actions: [
+              PopupMenuButton<String>(
+                onSelected: (String value) {
+                  switch (value) {
+                    case 'Login':
+                      Navigator.pushNamed(context, Routes.login);
+                      break;
+                    case 'Registro':
+                      Navigator.pushNamed(context, Routes.registration);
+                      break;
+                    case 'Configuración':
+                      Navigator.pushNamed(context, Routes.settings);
+                      break;
+                    case 'Cerrar sesión':
+                      Navigator.pushReplacementNamed(context, Routes.logout);
+                      break;
+                  }
+                },
+                itemBuilder: (BuildContext context) {
+                  return {'Login', 'Registro', 'Configuración', 'Cerrar sesión'}
+                      .map((String choice) {
+                    return PopupMenuItem<String>(
+                      value: choice,
+                      child: Text(
+                        choice,
+                        style: GoogleFonts.sansita(),
+                      ),
+                    );
+                  }).toList();
+                },
+                icon: const Icon(
+                  Icons.menu_sharp,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -181,10 +222,12 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                 },
                 locale: 'es_ES',
                 headerStyle: HeaderStyle(
-                  titleTextStyle: GoogleFonts.sansita(fontSize: 20.0, color: Colors.black),
+                  titleTextStyle:
+                      GoogleFonts.sansita(fontSize: 20.0, color: Colors.black),
                   formatButtonVisible: false,
                   leftChevronIcon: Icon(Icons.arrow_back, color: Colors.green),
-                  rightChevronIcon: Icon(Icons.arrow_forward, color: Colors.green),
+                  rightChevronIcon:
+                      Icon(Icons.arrow_forward, color: Colors.green),
                 ),
                 calendarStyle: CalendarStyle(
                   defaultTextStyle: GoogleFonts.sansita(),
@@ -200,7 +243,8 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                     shape: BoxShape.circle,
                   ),
                   outsideTextStyle: GoogleFonts.sansita(color: Colors.grey),
-                  disabledTextStyle: GoogleFonts.sansita(color: Colors.grey[400]),
+                  disabledTextStyle:
+                      GoogleFonts.sansita(color: Colors.grey[400]),
                 ),
               ),
               const SizedBox(height: 10),
