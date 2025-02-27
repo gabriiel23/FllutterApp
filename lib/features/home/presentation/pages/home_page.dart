@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
                 Column(
                   children: [
                     Text(
-                      "🥅  100+",
+                      "🥅  10000+",
                       style: GoogleFonts.sansita(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -129,7 +129,7 @@ class _HomeState extends State<Home> {
                 Column(
                   children: [
                     Text(
-                      "🧍🏻‍♂️ 200+",
+                      "🧍🏻‍♂️ 200000+",
                       style: GoogleFonts.sansita(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -464,73 +464,6 @@ class _HomeState extends State<Home> {
                 style: GoogleFonts.sansita(color: Colors.grey.shade400)),
           ),
         ],
-      ),
-    );
-  }
-
-  // Método reutilizable para construir las tarjetas de noticias y eventos
-  Widget _buildCard({
-    required String title,
-    required String imageUrl,
-    required String subtitle,
-    required String description,
-  }) {
-    return SizedBox(
-      width: double.infinity,
-      child: Card(
-        color: const Color(0xFF19382F),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Text(
-                title,
-                style: GoogleFonts.sansita(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(12.0)),
-              child: Image.network(
-                imageUrl,
-                width: double.infinity,
-                height: 150,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    subtitle,
-                    style: GoogleFonts.sansita(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    description,
-                    style: GoogleFonts.sansita(
-                      color: Colors.grey.shade400,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
