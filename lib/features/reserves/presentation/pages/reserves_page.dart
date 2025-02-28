@@ -13,6 +13,7 @@ class Reserves extends StatefulWidget {
 
 class _ReservesState extends State<Reserves> {
   String? servicioId;
+  String? espacioId;
   late Future<List<Reserva>> futureReservas;
 
   @override
@@ -25,6 +26,7 @@ class _ReservesState extends State<Reserves> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       servicioId = prefs.getString('servicio_id');
+      espacioId = prefs.getString('espacio_id');
     });
 
     if (servicioId != null) {
@@ -35,7 +37,7 @@ class _ReservesState extends State<Reserves> {
   }
 
 Future<List<Reserva>> obtenerReservas(String servicioId) async {
-  final String url = 'http://localhost:3000/api/reservas/servicio/$servicioId';
+  final String url = 'http://localhost:3000/api/reservas/espacio/$espacioId';
   print("Obteniendo reservas desde: $url"); // <-- Depuración
 
   try {
