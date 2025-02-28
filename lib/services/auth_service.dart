@@ -4,18 +4,26 @@ import 'package:jwt_decoder/jwt_decoder.dart'; // Agrega esta librería en tu pu
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  final String baseUrl = 'https://back-canchapp.onrender.com/api'; // Cambia esto por tu URL real
+  final String baseUrl =
+      'https://back-canchapp.onrender.com/api'; // Cambia esto por tu URL real
 
-  Future<Map<String, dynamic>> registerUser(String nombre, String email, String password, String rol) async {
+  Future<Map<String, dynamic>> registerUser(String nombre, String email,
+      String password, String rol, String telefono) async {
+    final Map<String, dynamic> requestBody = {
+      'nombre': nombre,
+      'email': email,
+      'telefono': telefono,
+      'rol': rol,
+      'password': password,
+    };
+
+    // Imprimir los datos antes de enviarlos
+    print('Datos enviados: ${jsonEncode(requestBody)}');
+
     final response = await http.post(
       Uri.parse('$baseUrl/auth/registro'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'nombre': nombre,
-        'email': email,
-        'password': password,
-        'rol': rol,
-      }),
+      body: jsonEncode(requestBody),
     );
 
     if (response.statusCode == 201) {
@@ -38,8 +46,10 @@ class AuthService {
 
       // Decodificar el token para extraer el rol y el ID del usuario
       Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-      String userRole = decodedToken['rol']; // Ajusta según la estructura de tu JWT
-      String userId = decodedToken['id']; // Ajusta según la estructura de tu JWT
+      String userRole =
+          decodedToken['rol']; // Ajusta según la estructura de tu JWT
+      String userId =
+          decodedToken['id']; // Ajusta según la estructura de tu JWT
 
       // Guardar el token, rol y ID en SharedPreferences
       final prefs = await SharedPreferences.getInstance();

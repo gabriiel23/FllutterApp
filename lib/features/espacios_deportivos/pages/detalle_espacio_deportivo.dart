@@ -22,16 +22,20 @@ class _DetalleEspacioDeportivoPageState
   List<dynamic> servicios = [];
   bool isLoading = true;
   String baseUrl = Config.baseUrl;
+  String? userRol; // Variable para almacenar el rol del usuario
 
   @override
   void initState() {
     super.initState();
-    _loadEspacioId();
+    _loadUserData();
   }
 
-  Future<void> _loadEspacioId() async {
+  Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    espacioId = prefs.getString('espacio_id') ?? '';
+    setState(() {
+      espacioId = prefs.getString('espacio_id') ?? '';
+      userRol = prefs.getString('userRol'); // Obtener el rol del usuario
+    });
     _fetchServicios();
   }
 
@@ -53,9 +57,9 @@ class _DetalleEspacioDeportivoPageState
 
   @override
   Widget build(BuildContext context) {
-    String baseUrl = Config.baseUrl;
-    String imageUrl = widget.espacio['imagen'] != null
-        ? '$baseUrl${widget.espacio['imagen']}'
+    String imageUrl = widget.espacio['imagen'] != null &&
+            widget.espacio['imagen'].startsWith('http')
+        ? widget.espacio['imagen']
         : '';
 
     return Scaffold(
@@ -162,31 +166,34 @@ class _DetalleEspacioDeportivoPageState
                       },
                     ),
               SizedBox(height: 20),
-              Center(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CrearServicioPage(),
+              // Mostrar botón solo si el usuario tiene el rol de "dueño"
+              if (userRol == 'dueño')
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CrearServicioPage(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF19382F), // Color de fondo
+                      foregroundColor: Colors.white, // Color del texto e icono
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10), // Bordes redondeados
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF19382F), // Color de fondo
-                    foregroundColor: Colors.white, // Color del texto e icono
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10), // Bordes redondeados
                     ),
+                    icon:
+                        Icon(Icons.add, color: Colors.white), // Ícono de "Nuevo"
+                    label: Text("Crear Servicio",
+                        style: GoogleFonts.sansita(fontSize: 16)),
                   ),
-                  icon:
-                      Icon(Icons.add, color: Colors.white), // Ícono de "Nuevo"
-                  label: Text("Crear Servicio",
-                      style: GoogleFonts.sansita(fontSize: 16)),
-                ),
-              )
+                )
             ],
           ),
         ),

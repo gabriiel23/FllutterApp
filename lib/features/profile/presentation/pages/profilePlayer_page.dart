@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePlayerPage extends StatefulWidget {
   @override
@@ -12,6 +13,8 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
   String? selectedRole;
   double height = 170;
   int age = 18;
+  String? userId;
+
   Map<String, int> attributes = {
     'Tiro': 5,
     'Regate': 5,
@@ -22,12 +25,32 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
     'Reflejos': 5,
   };
 
-  final String apiUrl = "https://back-canchapp.onrender.com/api/jugadores"; // Cambia según tu backend
+  final String apiUrl =
+      "https://back-canchapp.onrender.com/api/jugadores"; // Cambia según tu backend
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserId();
+  }
+
+  Future<void> loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userId = prefs.getString('userId');
+    });
+  }
 
   Future<void> saveProfile() async {
-    if (selectedRole == null) return;
+    if (selectedRole == null || userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: Usuario no autenticado")),
+      );
+      return;
+    }
 
     Map<String, dynamic> playerData = {
+      "usuario": userId, // Se agrega el ID del usuario
       "posicion": selectedRole,
       "estatura": height.toInt(),
       "edad": age,
@@ -69,31 +92,27 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: 20),
-            Center(
-              child: CircleAvatar(
+        child: Center(
+          // Envuelve en Center para centrar horizontalmente
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center, // Centra verticalmente
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 20),
+              CircleAvatar(
                 radius: 60,
                 backgroundImage: NetworkImage(
                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeK0gW1HYfQOp7FPzueC8sufR7nv0Bi2WejZyhEbIO9gEuBKtoEbiPs_oTOivMRzu4Jjs&usqp=CAU',
                 ),
               ),
-            ),
-            SizedBox(height: 20),
-            Center(
-              child: Text('Selecciona tu posición:', style: GoogleFonts.sansita(fontSize: 18)),
-            ),
-            Center(
-              child: DropdownButton<String>(
+              SizedBox(height: 20),
+              Text('Selecciona tu posición:',
+                  style: GoogleFonts.sansita(fontSize: 18)),
+              DropdownButton<String>(
                 value: selectedRole,
-                hint: Text('Elige una opción             '),
+                hint: Text('Elige una opción'),
                 items: ['Portero', 'Jugador'].map((role) {
-                  return DropdownMenuItem(
-                    value: role,
-                    child: Text(role),
-                  );
+                  return DropdownMenuItem(value: role, child: Text(role));
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
@@ -101,22 +120,21 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
                   });
                 },
               ),
-            ),
-            if (selectedRole != null) buildForm(),
-            SizedBox(height: 20),
-            if (selectedRole != null)
-              Center(
-                child: ElevatedButton(
+              if (selectedRole != null) buildForm(),
+              SizedBox(height: 20),
+              if (selectedRole != null)
+                ElevatedButton(
                   onPressed: saveProfile,
-                  child: Text('Guardar Perfil', style: GoogleFonts.sansita(fontSize: 18)),
+                  child: Text('Guardar Perfil',
+                      style: GoogleFonts.sansita(fontSize: 18)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF19382F),
                     foregroundColor: Colors.white,
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -131,7 +149,8 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 20),
-        Text('Estatura (cm): ${height.toInt()}', style: GoogleFonts.sansita(fontSize: 18)),
+        Text('Estatura (cm): ${height.toInt()}',
+            style: GoogleFonts.sansita(fontSize: 18)),
         Slider(
           value: height,
           min: 140,
@@ -166,12 +185,15 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('$attribute: ${attributes[attribute]}', style: GoogleFonts.sansita(fontSize: 18)),
+        Text('$attribute: ${attributes[attribute]}',
+            style: GoogleFonts.sansita(fontSize: 18)),
         Row(
           children: List.generate(10, (index) {
             return IconButton(
               icon: Icon(
-                index < attributes[attribute]! ? Icons.star_rounded : Icons.star_border_rounded,
+                index < attributes[attribute]!
+                    ? Icons.star_rounded
+                    : Icons.star_border_rounded,
                 color: Colors.green,
               ),
               onPressed: () {

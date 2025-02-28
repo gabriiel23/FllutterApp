@@ -32,47 +32,63 @@ class _CrearEspacioDeportivoPageState extends State<CrearEspacioDeportivoPage> {
     }
   }
 
-  Future<void> crearEspacioDeportivo() async {
-    if (!_formKey.currentState!.validate()) return;
-    _formKey.currentState!.save();
+Future<void> crearEspacioDeportivo() async {
+  if (!_formKey.currentState!.validate()) return;
+  _formKey.currentState!.save();
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userId');
-    if (userId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: Usuario no autenticado')));
-      return;
-    }
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? userId = prefs.getString('userId');
 
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('https://back-canchapp.onrender.com/api/espacio-deportivo'));
-
-    request.fields['nombre'] = nombre;
-    request.fields['ubicacion'] = ubicacion;
-    request.fields['descripcion'] = descripcion;
-    request.fields['propietario'] = userId;
-
-    if (!kIsWeb && imagenFile != null) {
-      request.files.add(await http.MultipartFile.fromPath('imagen', imagenFile!.path));
-    } else if (kIsWeb && imagenBytes != null) {
-      request.files.add(http.MultipartFile.fromBytes(
-        'imagen', imagenBytes!,
-        filename: 'imagen.png',
-      ));
-    }
-
-    var response = await request.send();
-
-    if (response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Espacio Deportivo creado con éxito')));
-      Navigator.pop(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al crear el espacio deportivo')));
-    }
+  if (userId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: Usuario no autenticado')));
+    return;
   }
 
+  // Imprimir datos antes de enviar
+  print("Datos a enviar:");
+  print("Nombre: $nombre");
+  print("Ubicación: $ubicacion");
+  print("Descripción: $descripcion");
+  print("Propietario (userId): $userId");
+
+  var request = http.MultipartRequest(
+      'POST', Uri.parse('https://back-canchapp.onrender.com/api/espacio/espacio-deportivo'));
+
+  request.fields['nombre'] = nombre;
+  request.fields['ubicacion'] = ubicacion;
+  request.fields['descripcion'] = descripcion;
+  request.fields['propietario'] = userId;
+
+  if (!kIsWeb && imagenFile != null) {
+    print("Enviando imagen desde archivo: ${imagenFile!.path}");
+    request.files.add(await http.MultipartFile.fromPath('imagen', imagenFile!.path));
+  } else if (kIsWeb && imagenBytes != null) {
+    print("Enviando imagen desde bytes (Web)");
+    request.files.add(http.MultipartFile.fromBytes(
+      'imagen', imagenBytes!,
+      filename: 'imagen.png',
+    ));
+  } else {
+    print("No se seleccionó ninguna imagen.");
+  }
+
+  var response = await request.send();
+
+  // Leer y mostrar la respuesta del servidor
+  var responseString = await response.stream.bytesToString();
+  print("Código de respuesta: ${response.statusCode}");
+  print("Respuesta del servidor: $responseString");
+
+  if (response.statusCode == 201) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Espacio Deportivo creado con éxito')));
+    Navigator.pop(context);
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al crear el espacio deportivo')));
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(

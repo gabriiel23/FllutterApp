@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/features/reserves/presentation/pages/reserves_jugador.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutterapp/features/home_admin/presentation/pages/homeAdmin_page.dart';
 import 'package:flutterapp/features/comunity/presentation/pages/groups_page.dart';
@@ -37,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
       _userRol == 'dueño' ? HomeAdminPage() : Home(),
       Groups(),
       _userRol == 'dueño' ? ListaEspaciosAdminDeportivosPage() : ListaEspaciosDeportivosPage(),
-      Reserves(),
+      _userRol == 'dueño' ? Reserves() : Reserves_user(),
       ProfilePage(),
     ];
   }

@@ -40,7 +40,7 @@ class _ListaEspaciosDeportivosPageState
       }
 
       final response = await http
-          .get(Uri.parse('$baseUrl/api/espacios-deportivos/$propietarioId'));
+          .get(Uri.parse('$baseUrl/api/espacio/espacios-deportivos/$propietarioId'));
 
       if (response.statusCode == 200) {
         final decodedData = json.decode(response.body);
@@ -128,8 +128,9 @@ class _ListaEspaciosDeportivosPageState
                           itemCount: espacios.length,
                           itemBuilder: (context, index) {
                             final espacio = espacios[index];
-                            String imageUrl = espacio['imagen'] != null
-                                ? '$baseUrl${espacio['imagen']}'
+                            String imageUrl = espacio['imagen'] != null &&
+                                    espacio['imagen'].startsWith('http')
+                                ? espacio['imagen']
                                 : '';
 
                             return GestureDetector(
@@ -222,13 +223,15 @@ class _ListaEspaciosDeportivosPageState
                     ],
                   ),
                 ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, Routes.newEspacioPage);
-        },
-        backgroundColor: const Color(0xFF19382F),
-        child: Icon(Icons.add, color: Colors.white),
-      ),
+      floatingActionButton: espacios.isEmpty
+          ? FloatingActionButton(
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.newEspacioPage);
+              },
+              backgroundColor: const Color(0xFF19382F),
+              child: Icon(Icons.add, color: Colors.white),
+            )
+          : null,
     );
   }
 }

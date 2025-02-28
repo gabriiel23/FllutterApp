@@ -12,6 +12,7 @@ class Routes {
   static const espacio = '/espacio';
   static const profile = '/profile';
   static const reserves = '/reserves';
+  static const reserves_user = '/reserves_user';
 
   // Rutas secundarias (sin BottomNavigationBar)
   static const splash = '/splash';

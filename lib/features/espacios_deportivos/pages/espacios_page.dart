@@ -32,7 +32,7 @@ class _ListaEspaciosDeportivosPageState
   Future<void> obtenerEspaciosDeportivos() async {
     try {
       final response =
-          await http.get(Uri.parse('$baseUrl/api/espacios-deportivos'));
+          await http.get(Uri.parse('$baseUrl/api/espacio/espacios-deportivos'));
 
       if (response.statusCode == 200) {
         final decodedData = json.decode(response.body);
@@ -167,9 +167,10 @@ class _ListaEspaciosDeportivosPageState
                         itemCount: espaciosFiltrados.length,
                         itemBuilder: (context, index) {
                           final espacio = espaciosFiltrados[index];
-                          String imageUrl = espacio['imagen'] != null
-                              ? '$baseUrl${espacio['imagen']}'
-                              : '';
+                            String imageUrl = espacio['imagen'] != null &&
+                                    espacio['imagen'].startsWith('http')
+                                ? espacio['imagen']
+                                : '';
 
                           return GestureDetector(
                             onTap: () async {

@@ -4,73 +4,70 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Reserves extends StatefulWidget {
-  const Reserves({super.key});
+class Reserves_user extends StatefulWidget {
+  const Reserves_user({super.key});
 
   @override
   _ReservesState createState() => _ReservesState();
 }
 
-class _ReservesState extends State<Reserves> {
-  String? servicioId;
-  String? espacioId;
+class _ReservesState extends State<Reserves_user> {
+  String? usuarioId;
   late Future<List<Reserva>> futureReservas;
 
   @override
   void initState() {
     super.initState();
-    _cargarServicioId();
+    _cargarUsuarioId();
   }
 
-  Future<void> _cargarServicioId() async {
+  Future<void> _cargarUsuarioId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      servicioId = prefs.getString('servicio_id');
-      espacioId = prefs.getString('espacio_id');
+      usuarioId = prefs.getString('userId');
     });
 
-    if (servicioId != null) {
+    if (usuarioId != null) {
       setState(() {
-        futureReservas = obtenerReservas(servicioId!);
+        futureReservas = obtenerReservas(usuarioId!);
       });
     }
   }
 
-Future<List<Reserva>> obtenerReservas(String servicioId) async {
-  final String url = 'https://back-canchapp.onrender.com/api/reservas/espacio/$espacioId';
-  print("Obteniendo reservas desde: $url"); // <-- Depuración
+  Future<List<Reserva>> obtenerReservas(String usuarioId) async {
+    final String url = 'https://back-canchapp.onrender.com/api/reservas/$usuarioId';
+    print("Obteniendo reservas desde: $url");
 
-  try {
-    final response = await http.get(Uri.parse(url));
+    try {
+      final response = await http.get(Uri.parse(url));
+      print("Código de respuesta: \${response.statusCode}");
+      print("Respuesta: \${response.body}");
 
-    print("Código de respuesta: ${response.statusCode}"); // <-- Depuración
-    print("Respuesta: ${response.body}"); // <-- Depuración
-
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      return data.map((json) => Reserva.fromJson(json)).toList();
-    } else {
-      throw Exception("Error al obtener reservas: ${response.statusCode}");
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((json) => Reserva.fromJson(json)).toList();
+      } else {
+        throw Exception("Error al obtener reservas: \${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error de conexión: $e");
+      throw Exception("Error de conexión: $e");
     }
-  } catch (e) {
-    print("Error de conexión: $e"); // <-- Depuración
-    throw Exception("Error de conexión: $e");
   }
-}
 
-  Future<void> cambiarEstadoReserva(String reservaId, String nuevoEstado) async {
+  Future<void> cambiarEstadoReserva(String reservaId) async {
     final String url = 'https://back-canchapp.onrender.com/api/reservas/$reservaId/estado';
-    
+
     try {
       final response = await http.patch(
         Uri.parse(url),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"estado": nuevoEstado}),
+        body: jsonEncode({"estado": "Cancelada"}),
       );
 
       if (response.statusCode == 200) {
         setState(() {
-          futureReservas = obtenerReservas(servicioId!);
+          futureReservas = obtenerReservas(usuarioId!);
         });
       } else {
         throw Exception("Error al actualizar el estado de la reserva");
@@ -95,7 +92,7 @@ Future<List<Reserva>> obtenerReservas(String servicioId) async {
           ),
         ),
       ),
-      body: servicioId == null
+      body: usuarioId == null
           ? const Center(child: CircularProgressIndicator())
           : FutureBuilder<List<Reserva>>(
               future: futureReservas,
@@ -103,10 +100,11 @@ Future<List<Reserva>> obtenerReservas(String servicioId) async {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text("Error: ${snapshot.error}"));
+                  return Center(child: Text("No hay reservas todavía"));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text("No hay reservas disponibles"));
-                }
+  return const Center(
+      child: Text("No hay reservas todavía"));
+} 
 
                 List<Reserva> reservas = snapshot.data!;
 
@@ -155,28 +153,14 @@ Future<List<Reserva>> obtenerReservas(String servicioId) async {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  cambiarEstadoReserva(reserva.id, "Confirmada");
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
-                                ),
-                                child: const Text("Confirmar"),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  cambiarEstadoReserva(reserva.id, "Cancelada");
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
-                                ),
-                                child: const Text("Cancelar"),
-                              ),
-                            ],
+                          ElevatedButton(
+                            onPressed: () {
+                              cambiarEstadoReserva(reserva.id);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            ),
+                            child: const Text("Cancelar"),
                           ),
                         ],
                       ),
@@ -209,7 +193,7 @@ class Reserva {
   factory Reserva.fromJson(Map<String, dynamic> json) {
     return Reserva(
       id: json["_id"],
-      servicio: json["servicio"]["nombre"], // Asegúrate de que el JSON contiene el nombre del servicio
+      servicio: json["servicio"]["nombre"],
       fecha: json["fecha"],
       hora: json["hora"],
       estado: json["estado"],
