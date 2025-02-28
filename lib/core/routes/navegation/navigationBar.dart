@@ -35,8 +35,8 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> _buildPages() {
     return [
       _userRol == 'dueño' ? HomeAdminPage() : Home(),
-      _userRol == 'dueño' ? ListaEspaciosAdminDeportivosPage() : ListaEspaciosDeportivosPage(),
       Groups(),
+      _userRol == 'dueño' ? ListaEspaciosAdminDeportivosPage() : ListaEspaciosDeportivosPage(),
       Reserves(),
       ProfilePage(),
     ];
@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<String> _labels = [
     'Inicio',
-    'Espacios',
+    'Comunidad',
     '', // Espacio para el FAB
     'Tus reservas',
     'Perfil'
@@ -52,7 +52,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<IconData> _icons = [
     Icons.home,
-    Icons.location_on,
+    Icons.group,
     Icons.location_on, // Icono del botón flotante
     Icons.history_outlined,
     Icons.person_pin,

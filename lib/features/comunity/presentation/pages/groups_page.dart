@@ -49,7 +49,7 @@ class PlayersTab extends StatefulWidget {
 
 class _PlayersTabState extends State<PlayersTab> {
   Future<List<dynamic>> fetchPlayers() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/jugadores'));
+    final response = await http.get(Uri.parse('https://back-canchapp.onrender.com/api/jugadores'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
