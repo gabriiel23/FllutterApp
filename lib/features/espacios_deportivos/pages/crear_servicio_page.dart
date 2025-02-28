@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:google_fonts/google_fonts.dart';
 
 class CrearServicioPage extends StatefulWidget {
   @override
@@ -27,7 +28,8 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
   // Seleccionar una imagen desde la galería
   Future<void> seleccionarImagen() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       if (kIsWeb) {
@@ -92,7 +94,8 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
 
     request.fields['nombre'] = nombre;
     request.fields['tipo'] = tipo;
-    request.fields['horarios'] = json.encode(horarios); // Enviar horarios como JSON
+    request.fields['horarios'] =
+        json.encode(horarios); // Enviar horarios como JSON
 
     if (!kIsWeb && imagenFile != null) {
       request.files.add(
@@ -100,7 +103,8 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
       );
     } else if (kIsWeb && imagenBytes != null) {
       request.files.add(
-        http.MultipartFile.fromBytes('imagen', imagenBytes!, filename: 'imagen.png'),
+        http.MultipartFile.fromBytes('imagen', imagenBytes!,
+            filename: 'imagen.png'),
       );
     }
 
@@ -127,56 +131,131 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Crear Servicio"),
-        backgroundColor: Colors.green[700],
+        backgroundColor: const Color(0xFF19382F),
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(
+          "Crear un servicio",
+          style: GoogleFonts.sansita(
+            fontSize: 24,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 30),
         child: SingleChildScrollView(
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTextField("Nombre del Servicio", "Ej: Cancha de fútbol", (value) => nombre = value!),
-                _buildDropdownField("Tipo de Servicio", ["Cancha", "Piscina", "Ecuavoley", "Otro"], (value) => tipo = value!),
-                _buildTextField("Horario Inicio", "Ej: 08:00", (value) => {}, controller: horarioInicioController),
-                _buildTextField("Horario Fin", "Ej: 09:00", (value) => {}, controller: horarioFinController),
-                _buildTextField("Precio", "Ej: 10.00", (value) => {}, controller: precioController, keyboardType: TextInputType.number),
+                _buildTextField("Nombre del Servicio", "Ej: Cancha de fútbol",
+                    (value) => nombre = value!),
+                _buildDropdownField(
+                    "Tipo de Servicio",
+                    ["Cancha", "Piscina", "Ecuavoley", "Otro"],
+                    (value) => tipo = value!),
+                _buildTextField("Horario Inicio", "Ej: 08:00", (value) => {},
+                    controller: horarioInicioController),
+                _buildTextField("Horario Fin", "Ej: 09:00", (value) => {},
+                    controller: horarioFinController),
+                _buildTextField("Precio", "Ej: 10.00", (value) => {},
+                    controller: precioController,
+                    keyboardType: TextInputType.number),
+                SizedBox(height: 10),
+                Divider(),
                 SwitchListTile(
-                  title: Text("Disponible"),
+                  title: Text(
+                    "Disponible",
+                    style: GoogleFonts.sansita(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF19382F),
+                    ),
+                  ),
                   value: disponible,
+                  activeColor: Color(
+                      0xFF19382F), // Color del switch cuando está activado
                   onChanged: (value) {
                     setState(() {
                       disponible = value;
                     });
                   },
                 ),
-                ElevatedButton(
-                  onPressed: agregarHorario,
-                  child: Text("Agregar Horario"),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                ),
-                SizedBox(height: 16),
-                // Mostrar horarios añadidos
-                Column(
-                  children: horarios.map((h) => Text("${h['inicio']} - ${h['fin']} (\$${h['precio']})")).toList(),
+                Divider(),
+                SizedBox(height: 10),
+                Center(
+                  child: Column(
+                    children: [
+                      ElevatedButton(
+                        onPressed: agregarHorario,
+                        child: Text(
+                          "➕  Agregar Horario",
+                          style: GoogleFonts.sansita(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF19382F),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 16, horizontal: 20),
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      // Mostrar horarios añadidos
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: horarios
+                            .map((h) => Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.new_label_outlined,
+                                        color: Colors.amber, size: 20),
+                                    SizedBox(
+                                        width:
+                                            8), // Espacio entre el icono y el texto
+                                    Text(
+                                      "${h['inicio']} - ${h['fin']} (\$${h['precio']})",
+                                      style: GoogleFonts.sansita(fontSize: 16),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ))
+                            .toList(),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 16),
                 Center(
                   child: Column(
                     children: [
-                      if (imagenBytes != null) Image.memory(imagenBytes!, height: 150),
-                      if (imagenFile != null) Image.file(imagenFile!, height: 150),
-                      if (imagenBytes == null && imagenFile == null)
-                        Text("No se ha seleccionado imagen", style: TextStyle(fontSize: 16, color: Colors.grey)),
                       SizedBox(height: 10),
                       ElevatedButton.icon(
                         onPressed: seleccionarImagen,
-                        icon: Icon(Icons.image),
-                        label: Text("Seleccionar Imagen"),
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.green[600]),
+                        icon: Icon(
+                          Icons.image,
+                          color: Colors.white,
+                        ),
+                        label: Text("Cargar Imagen",
+                            style: GoogleFonts.sansita(
+                                color: Colors.white, fontSize: 16)),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF19382F),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 20)),
                       ),
+                      SizedBox(height: 10),
+                      if (imagenBytes != null)
+                        Image.memory(imagenBytes!, height: 150),
+                      if (imagenFile != null)
+                        Image.file(imagenFile!, height: 150),
+                      if (imagenBytes == null && imagenFile == null)
+                        Text("No se ha seleccionado imagen",
+                            style: GoogleFonts.sansita(
+                                fontSize: 16, color: Colors.grey.shade700)),
                     ],
                   ),
                 ),
@@ -184,10 +263,13 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: crearServicio,
-                    child: Text("Crear Servicio", style: TextStyle(fontSize: 18)),
+                    child: Text("➕  Crear este nuevo servicio",
+                        style: GoogleFonts.sansita(
+                            color: Colors.white, fontSize: 18)),
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-                      backgroundColor: Colors.green[700],
+                      padding:
+                          EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                      backgroundColor: Color(0xFF19382F),
                     ),
                   ),
                 ),
@@ -200,15 +282,36 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
   }
 
   // Campo de texto para entradas
-  Widget _buildTextField(String label, String hint, Function(String?) onSaved, {TextEditingController? controller, TextInputType keyboardType = TextInputType.text}) {
+  Widget _buildTextField(String label, String hint, Function(String?) onSaved,
+      {TextEditingController? controller,
+      TextInputType keyboardType = TextInputType.text}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: GoogleFonts.sansita(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF19382F), // Color personalizado
+          ),
+        ),
+        SizedBox(height: 6),
         TextFormField(
-          decoration: InputDecoration(hintText: hint, border: OutlineInputBorder()),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: GoogleFonts.sansita(color: Colors.grey.shade600),
+            border: UnderlineInputBorder(), // Solo línea inferior
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF19382F), width: 2),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey, width: 1),
+            ),
+          ),
           keyboardType: keyboardType,
-          validator: (value) => value!.isEmpty ? "Este campo es obligatorio" : null,
+          validator: (value) =>
+              value!.isEmpty ? "Este campo es obligatorio" : null,
           onSaved: onSaved,
           controller: controller,
         ),
@@ -217,23 +320,44 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
     );
   }
 
-  // Campo de selección para dropdown
-  Widget _buildDropdownField(String label, List<String> items, Function(String?) onSaved) {
+// Campo de selección para dropdown
+  Widget _buildDropdownField(
+      String label, List<String> items, Function(String?) onSaved) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+        Text(
+          label,
+          style: GoogleFonts.sansita(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF19382F), // Color personalizado
+          ),
+        ),
+        SizedBox(height: 6),
         DropdownButtonFormField<String>(
           items: items.map((String value) {
             return DropdownMenuItem<String>(
               value: value,
-              child: Text(value),
+              child: Text(
+                value,
+                style: GoogleFonts.sansita(fontSize: 16),
+              ),
             );
           }).toList(),
           onChanged: (value) {},
-          validator: (value) => value == null ? "Este campo es obligatorio" : null,
+          validator: (value) =>
+              value == null ? "Este campo es obligatorio" : null,
           onSaved: onSaved,
-          decoration: InputDecoration(border: OutlineInputBorder()),
+          decoration: InputDecoration(
+            border: UnderlineInputBorder(), // Solo línea inferior
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Color(0xFF19382F), width: 2),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey, width: 1),
+            ),
+          ),
         ),
         SizedBox(height: 12),
       ],

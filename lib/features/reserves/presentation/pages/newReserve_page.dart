@@ -39,7 +39,7 @@ Future<void> _fetchAvailableHours() async {
   if (_servicioId == null) return;
 
   var response = await http.get(
-    Uri.parse("http://localhost:3000/api/$_servicioId/horarios"),
+    Uri.parse("https://back-canchapp.onrender.com/api/$_servicioId/horarios"),
     headers: {"Content-Type": "application/json"},
   );
 
@@ -81,7 +81,7 @@ Future<void> _fetchAvailableHours() async {
     if (_servicioId == null) return;
 
     var response = await http.get(
-      Uri.parse("http://localhost:3000/api/reservas/servicio/$_servicioId"),
+      Uri.parse("https://back-canchapp.onrender.com/api/reservas/servicio/$_servicioId"),
       headers: {"Content-Type": "application/json"},
     );
 
@@ -138,7 +138,7 @@ Future<void> _fetchAvailableHours() async {
     };
 
     var response = await http.post(
-      Uri.parse("http://localhost:3000/api/reservas/crear"),
+      Uri.parse("https://back-canchapp.onrender.com/api/reservas/crear"),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(reservaData),
     );
