@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      const Color(0xFF19382F).withValues(alpha: _animation.value), // Ajusta la opacidad dinámicamente
+                      Color(0xFF19382F).withOpacity(_animation.value),  // Ajusta la opacidad dinámicamente
                       const Color.fromARGB(255, 34, 68, 58) // Color de fondo complementario
                     ],
                     begin: Alignment.topLeft, // Dirección del degradado
