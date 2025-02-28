@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomeAdminPage extends StatefulWidget {
   @override
@@ -12,27 +15,71 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
   DateTime _selectedDay = normalizeDate(DateTime.now());
   DateTime _focusedDay = normalizeDate(DateTime.now());
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
+  String? espacioId;
+  List<Reserva> todasLasReservas = []; // Almacena todas las reservas
+  bool isLoading = true; // Para manejar el estado de carga
 
   @override
   void initState() {
     super.initState();
     initializeDateFormatting('es_ES', null);
+    _cargarEspacioId();
   }
 
-  // Función para normalizar fechas
+  Future<void> _cargarEspacioId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      espacioId = prefs.getString('espacio_id');
+    });
+
+    if (espacioId != null) {
+      await obtenerTodasLasReservas();
+    }
+  }
+
+  Future<void> obtenerTodasLasReservas() async {
+    final String url = 'https://back-canchapp.onrender.com/api/reservas/espacio/$espacioId';
+    print("Obteniendo todas las reservas desde: $url"); // <-- Depuración
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      print("Código de respuesta: ${response.statusCode}"); // <-- Depuración
+      print("Respuesta: ${response.body}"); // <-- Depuración
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        setState(() {
+          todasLasReservas = data.map((json) => Reserva.fromJson(json)).toList();
+          isLoading = false; // Datos cargados
+        });
+      } else {
+        throw Exception("Error al obtener reservas: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error de conexión: $e"); // <-- Depuración
+      setState(() {
+        isLoading = false; // Error, pero detenemos la carga
+      });
+      throw Exception("Error de conexión: $e");
+    }
+  }
+
+  // Función para filtrar reservas por fecha
+  List<Reserva> filtrarReservasPorFecha(DateTime fecha) {
+    return todasLasReservas.where((reserva) {
+      return isSameDay(normalizeDate(DateTime.parse(reserva.fecha)), fecha);
+    }).toList();
+  }
+
   static DateTime normalizeDate(DateTime date) {
     return DateTime(date.year, date.month, date.day);
   }
 
-  // Reservas (usando fechas normalizadas)
-  Map<DateTime, List<String>> reservations = {
-    normalizeDate(DateTime(2025, 2, 26)): ['Reserva 1', 'Reserva 2', 'Reserva 3', 'Reserva 4'],
-    normalizeDate(DateTime(2025, 2, 27)): ['Reserva 5', 'Reserva 6', 'Reserva 7'],
-  };
-
   @override
   Widget build(BuildContext context) {
     DateTime normalizedSelectedDay = normalizeDate(_selectedDay);
+    List<Reserva> reservasDelDia = filtrarReservasPorFecha(normalizedSelectedDay);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -211,13 +258,25 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                   fontWeight: FontWeight.normal,
                 ),
               ),
-              ...(reservations[normalizedSelectedDay] ?? []).map(
-                (reserva) => ListTile(
-                  leading: Icon(Icons.sports_soccer, color: Colors.green),
-                  title: Text(reserva, style: GoogleFonts.sansita()),
-                ),
-              ),
               const SizedBox(height: 10),
+              if (isLoading)
+                const Center(child: CircularProgressIndicator())
+              else if (reservasDelDia.isEmpty)
+                Center(
+                  child: Text(
+                    "No hay reservas en esta fecha",
+                    style: GoogleFonts.sansita(fontSize: 16),
+                  ),
+                )
+              else
+                Column(
+                  children: reservasDelDia.map((reserva) => ListTile(
+                    leading: Icon(Icons.sports_soccer, color: Colors.green),
+                    title: Text(reserva.servicio, style: GoogleFonts.sansita()),
+                    subtitle: Text("Hora: ${reserva.hora}", style: GoogleFonts.sansita()),
+                  )).toList(),
+                ),
+              const SizedBox(height: 20),
               const Divider(),
               const SizedBox(height: 20),
               Row(
@@ -261,6 +320,35 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class Reserva {
+  final String id;
+  final String servicio;
+  final String fecha;
+  final String hora;
+  final String estado;
+  final String usuario;
+
+  Reserva({
+    required this.id,
+    required this.servicio,
+    required this.fecha,
+    required this.hora,
+    required this.estado,
+    required this.usuario,
+  });
+
+  factory Reserva.fromJson(Map<String, dynamic> json) {
+    return Reserva(
+      id: json["_id"],
+      servicio: json["servicio"]["nombre"], // Asegúrate de que el JSON contiene el nombre del servicio
+      fecha: json["fecha"],
+      hora: json["hora"],
+      estado: json["estado"],
+      usuario: json["usuario"]["nombre"],
     );
   }
 }

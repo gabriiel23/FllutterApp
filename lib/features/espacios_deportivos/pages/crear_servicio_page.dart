@@ -24,6 +24,7 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
   TextEditingController horarioFinController = TextEditingController();
   TextEditingController precioController = TextEditingController();
   bool disponible = true;
+  bool _showHorarioForm = false; // Estado para controlar la visibilidad del formulario
 
   // Seleccionar una imagen desde la galería
   Future<void> seleccionarImagen() async {
@@ -56,6 +57,7 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
         horarioInicioController.clear();
         horarioFinController.clear();
         precioController.clear();
+        _showHorarioForm = false; // Ocultar el formulario después de agregar
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -156,77 +158,94 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
                     "Tipo de Servicio",
                     ["Cancha", "Piscina", "Ecuavoley", "Otro"],
                     (value) => tipo = value!),
-                _buildTextField("Horario Inicio", "Ej: 08:00", (value) => {},
-                    controller: horarioInicioController),
-                _buildTextField("Horario Fin", "Ej: 09:00", (value) => {},
-                    controller: horarioFinController),
-                _buildTextField("Precio", "Ej: 10.00", (value) => {},
-                    controller: precioController,
-                    keyboardType: TextInputType.number),
-                SizedBox(height: 10),
-                Divider(),
-                SwitchListTile(
-                  title: Text(
-                    "Disponible",
-                    style: GoogleFonts.sansita(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF19382F),
+                if (_showHorarioForm) ...[
+                  _buildTextField("Horario Inicio", "Ej: 08:00", (value) => {},
+                      controller: horarioInicioController),
+                  _buildTextField("Horario Fin", "Ej: 09:00", (value) => {},
+                      controller: horarioFinController),
+                  _buildTextField("Precio", "Ej: 10.00", (value) => {},
+                      controller: precioController,
+                      keyboardType: TextInputType.number),
+                  SizedBox(height: 10),
+                  Divider(),
+                  SwitchListTile(
+                    title: Text(
+                      "Disponible",
+                      style: GoogleFonts.sansita(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF19382F),
+                      ),
+                    ),
+                    value: disponible,
+                    activeColor: Color(0xFF19382F),
+                    onChanged: (value) {
+                      setState(() {
+                        disponible = value;
+                      });
+                    },
+                  ),
+                  Divider(),
+                  SizedBox(height: 10),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: agregarHorario,
+                      child: Text(
+                        "➕  Agregar Horario",
+                        style: GoogleFonts.sansita(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF19382F),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 20),
+                      ),
                     ),
                   ),
-                  value: disponible,
-                  activeColor: Color(
-                      0xFF19382F), // Color del switch cuando está activado
-                  onChanged: (value) {
-                    setState(() {
-                      disponible = value;
-                    });
-                  },
-                ),
-                Divider(),
-                SizedBox(height: 10),
-                Center(
-                  child: Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: agregarHorario,
-                        child: Text(
-                          "➕  Agregar Horario",
-                          style: GoogleFonts.sansita(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF19382F),
-                          padding: EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 20),
+                ],
+                if (!_showHorarioForm)
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _showHorarioForm = true; // Mostrar el formulario
+                        });
+                      },
+                      child: Text(
+                        "➕  Agregar otro horario",
+                        style: GoogleFonts.sansita(
+                          color: Colors.white,
+                          fontSize: 16,
                         ),
                       ),
-                      SizedBox(height: 16),
-                      // Mostrar horarios añadidos
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: horarios
-                            .map((h) => Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.new_label_outlined,
-                                        color: Colors.amber, size: 20),
-                                    SizedBox(
-                                        width:
-                                            8), // Espacio entre el icono y el texto
-                                    Text(
-                                      "${h['inicio']} - ${h['fin']} (\$${h['precio']})",
-                                      style: GoogleFonts.sansita(fontSize: 16),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                ))
-                            .toList(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF19382F),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 20),
                       ),
-                    ],
+                    ),
                   ),
+                SizedBox(height: 16),
+                // Mostrar horarios añadidos
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: horarios
+                      .map((h) => Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.new_label_outlined,
+                                  color: Colors.amber, size: 20),
+                              SizedBox(width: 8),
+                              Text(
+                                "${h['inicio']} - ${h['fin']} (\$${h['precio']})",
+                                style: GoogleFonts.sansita(fontSize: 16),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ))
+                      .toList(),
                 ),
                 SizedBox(height: 16),
                 Center(
@@ -293,7 +312,7 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
           style: GoogleFonts.sansita(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF19382F), // Color personalizado
+            color: Color(0xFF19382F),
           ),
         ),
         SizedBox(height: 6),
@@ -301,7 +320,7 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: GoogleFonts.sansita(color: Colors.grey.shade600),
-            border: UnderlineInputBorder(), // Solo línea inferior
+            border: UnderlineInputBorder(),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Color(0xFF19382F), width: 2),
             ),
@@ -320,7 +339,7 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
     );
   }
 
-// Campo de selección para dropdown
+  // Campo de selección para dropdown
   Widget _buildDropdownField(
       String label, List<String> items, Function(String?) onSaved) {
     return Column(
@@ -331,7 +350,7 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
           style: GoogleFonts.sansita(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF19382F), // Color personalizado
+            color: Color(0xFF19382F),
           ),
         ),
         SizedBox(height: 6),
@@ -350,7 +369,7 @@ class _CrearServicioFormState extends State<CrearServicioPage> {
               value == null ? "Este campo es obligatorio" : null,
           onSaved: onSaved,
           decoration: InputDecoration(
-            border: UnderlineInputBorder(), // Solo línea inferior
+            border: UnderlineInputBorder(),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Color(0xFF19382F), width: 2),
             ),

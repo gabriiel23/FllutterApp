@@ -1,7 +1,9 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class PaymentPage extends StatefulWidget {
   @override
@@ -9,16 +11,36 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _Payment extends State<PaymentPage> {
-  // Variable para guardar la imagen seleccionada
-  File? _image;
+  // Variables para manejar la imagen seleccionada
+  File? _imageFile;
+  Uint8List? _imageBytes;
 
   // Método para seleccionar la imagen del comprobante de pago
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
+      if (kIsWeb) {
+        // Si es web, leer la imagen como bytes
+        _imageBytes = await pickedFile.readAsBytes();
+      } else {
+        // Si no es web, usar File
+        _imageFile = File(pickedFile.path);
+      }
+      setState(() {});
+
+      // Mostrar SnackBar de confirmación
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Comprobante subido correctamente"),
+          duration: Duration(seconds: 2), // Duración de 2 segundos
+        ),
+      );
+
+      // Redirigir a /home después de 2 segundos
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.pushReplacementNamed(context, '/home');
       });
     }
   }
@@ -114,9 +136,13 @@ class _Payment extends State<PaymentPage> {
               ),
               SizedBox(height: 20),
               // Mostrar la imagen seleccionada si existe
-              _image != null
-                  ? Image.file(_image!, width: 200, height: 200)
-                  : Container(), // Si no hay imagen seleccionada, no mostrar nada
+              if (_imageBytes != null)
+                Image.memory(_imageBytes!, width: 200, height: 200),
+              if (_imageFile != null)
+                Image.file(_imageFile!, width: 200, height: 200),
+              if (_imageBytes == null && _imageFile == null)
+                Text("No se ha seleccionado ninguna imagen",
+                    style: GoogleFonts.sansita(color: Colors.grey)),
             ],
           ),
         ),

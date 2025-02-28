@@ -80,115 +80,144 @@ Future<List<Reserva>> obtenerReservas(String servicioId) async {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF19382F),
-        title: Text(
-          "Tus reservas",
-          style: GoogleFonts.sansita(
-            fontSize: 24,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.white,
+    appBar: AppBar(
+      backgroundColor: const Color(0xFF19382F),
+      title: Text(
+        "Tus reservas",
+        style: GoogleFonts.sansita(
+          fontSize: 24,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
         ),
       ),
-      body: servicioId == null
-          ? const Center(child: CircularProgressIndicator())
-          : FutureBuilder<List<Reserva>>(
-              future: futureReservas,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("Error: ${snapshot.error}"));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text("No hay reservas disponibles"));
-                }
+    ),
+    body: servicioId == null
+        ? const Center(child: CircularProgressIndicator())
+        : Column(
+            children: [
+              // Botón de actualizar reservas
+              ElevatedButton(
+                onPressed: () async {
+                  setState(() {
+                    // Reiniciar el estado de carga
+                    futureReservas = obtenerReservas(servicioId!);
+                  });
+                },
+                child: Text(
+                  "Actualizar reservas",
+                  style: GoogleFonts.sansita(fontSize: 16),
+                ),
+              ),
+              // Lista de reservas
+              Expanded(
+                child: FutureBuilder<List<Reserva>>(
+                  future: futureReservas,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          "Error al cargar las reservas",
+                          style: GoogleFonts.sansita(fontSize: 16),
+                        ),
+                      );
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No hay reservas disponibles",
+                          style: GoogleFonts.sansita(fontSize: 16),
+                        ),
+                      );
+                    }
 
-                List<Reserva> reservas = snapshot.data!;
+                    List<Reserva> reservas = snapshot.data!;
 
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: reservas.length,
-                  itemBuilder: (context, index) {
-                    final reserva = reservas[index];
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: reservas.length,
+                      itemBuilder: (context, index) {
+                        final reserva = reservas[index];
 
-                    return Container(
-                      padding: const EdgeInsets.all(12),
-                      margin: const EdgeInsets.only(bottom: 16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE5F7E9),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: const Color(0xFF19382F)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Fecha: ${reserva.fecha} - Hora: ${reserva.hora}",
-                            style: GoogleFonts.sansita(
-                              color: const Color(0xFF19382F),
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        return Container(
+                          padding: const EdgeInsets.all(12),
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE5F7E9),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: const Color(0xFF19382F)),
                           ),
-                          Text(
-                            "Servicio: ${reserva.servicio}",
-                            style: GoogleFonts.sansita(
-                              color: const Color(0xFF19382F),
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(
-                            "Estado: ${reserva.estado}",
-                            style: GoogleFonts.sansita(
-                              color: reserva.estado == "Confirmada"
-                                  ? Colors.green
-                                  : reserva.estado == "Cancelada"
-                                      ? Colors.red
-                                      : Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  cambiarEstadoReserva(reserva.id, "Confirmada");
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.green,
+                              Text(
+                                "Fecha: ${reserva.fecha} - Hora: ${reserva.hora}",
+                                style: GoogleFonts.sansita(
+                                  color: const Color(0xFF19382F),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                child: const Text("Confirmar"),
                               ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  cambiarEstadoReserva(reserva.id, "Cancelada");
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
+                              Text(
+                                "Servicio: ${reserva.servicio}",
+                                style: GoogleFonts.sansita(
+                                  color: const Color(0xFF19382F),
+                                  fontSize: 16,
                                 ),
-                                child: const Text("Cancelar"),
+                              ),
+                              Text(
+                                "Estado: ${reserva.estado}",
+                                style: GoogleFonts.sansita(
+                                  color: reserva.estado == "Confirmada"
+                                      ? Colors.green
+                                      : reserva.estado == "Cancelada"
+                                          ? Colors.red
+                                          : Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      cambiarEstadoReserva(reserva.id, "Confirmada");
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                    ),
+                                    child: const Text("Confirmar"),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      cambiarEstadoReserva(reserva.id, "Cancelada");
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                    ),
+                                    child: const Text("Cancelar"),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
-    );
-  }
+                ),
+              ),
+            ],
+          ),
+  );
 }
-
+}
 class Reserva {
   final String id;
   final String servicio;

@@ -106,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       CircleAvatar(
                         radius: 60,
                         backgroundImage: NetworkImage(userData!['avatar'] ??
-                            'https://via.placeholder.com/150'),
+                            'https://w7.pngwing.com/pngs/1008/377/png-transparent-computer-icons-avatar-user-profile-avatar-heroes-black-hair-computer.png'),
                       ),
                       const SizedBox(height: 20),
                       Text(
@@ -219,7 +219,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 horizontal: 30, vertical: 15),
                           ),
                           child: Text(
-                            "Ver perfil de jugador",
+                            "Crear perfil de jugador",
                             style: GoogleFonts.sansita(
                                 fontSize: 18, color: Colors.white),
                           ),

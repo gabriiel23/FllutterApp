@@ -35,7 +35,8 @@ class _ReservesState extends State<Reserves_user> {
   }
 
   Future<List<Reserva>> obtenerReservas(String usuarioId) async {
-    final String url = 'https://back-canchapp.onrender.com/api/reservas/$usuarioId';
+    final String url =
+        'https://back-canchapp.onrender.com/api/reservas/$usuarioId';
     print("Obteniendo reservas desde: $url");
 
     try {
@@ -56,7 +57,8 @@ class _ReservesState extends State<Reserves_user> {
   }
 
   Future<void> cambiarEstadoReserva(String reservaId) async {
-    final String url = 'https://back-canchapp.onrender.com/api/reservas/$reservaId/estado';
+    final String url =
+        'https://back-canchapp.onrender.com/api/reservas/$reservaId/estado';
 
     try {
       final response = await http.patch(
@@ -102,9 +104,8 @@ class _ReservesState extends State<Reserves_user> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text("No hay reservas todavía"));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-  return const Center(
-      child: Text("No hay reservas todavía"));
-} 
+                  return const Center(child: Text("No hay reservas todavía"));
+                }
 
                 List<Reserva> reservas = snapshot.data!;
 
@@ -125,6 +126,14 @@ class _ReservesState extends State<Reserves_user> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text(
+                            "Espacio Deportivo: ${reserva.espacioDeportivo}", // Mostrar el nombre del espacio
+                            style: GoogleFonts.sansita(
+                              color: const Color(0xFF19382F),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           Text(
                             "Fecha: ${reserva.fecha} - Hora: ${reserva.hora}",
                             style: GoogleFonts.sansita(
@@ -180,6 +189,7 @@ class Reserva {
   final String hora;
   final String estado;
   final String usuario;
+  final String espacioDeportivo; // Cambiado para reflejar el JSON
 
   Reserva({
     required this.id,
@@ -188,6 +198,7 @@ class Reserva {
     required this.hora,
     required this.estado,
     required this.usuario,
+    required this.espacioDeportivo, // Cambiado para reflejar el JSON
   });
 
   factory Reserva.fromJson(Map<String, dynamic> json) {
@@ -198,6 +209,8 @@ class Reserva {
       hora: json["hora"],
       estado: json["estado"],
       usuario: json["usuario"]["nombre"],
+      espacioDeportivo: json["espacio"]
+          ["nombre"], // Ajustado para reflejar el JSON
     );
   }
 }

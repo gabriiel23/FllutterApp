@@ -39,8 +39,8 @@ class _ListaEspaciosDeportivosPageState
         return;
       }
 
-      final response = await http
-          .get(Uri.parse('$baseUrl/api/espacio/espacios-deportivos/$propietarioId'));
+      final response = await http.get(
+          Uri.parse('$baseUrl/api/espacio/espacios-deportivos/$propietarioId'));
 
       if (response.statusCode == 200) {
         final decodedData = json.decode(response.body);
@@ -99,10 +99,18 @@ class _ListaEspaciosDeportivosPageState
                               fontSize: 16, color: Colors.red)),
                       SizedBox(height: 10),
                       ElevatedButton(
-                        onPressed: obtenerEspaciosDeportivos,
-                        child: Text("Reintentar",
-                            style: GoogleFonts.sansita(fontSize: 16)),
-                      ),
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true; // Activar el estado de carga
+                            hasError = false; // Reiniciar el estado de error
+                          });
+                          await obtenerEspaciosDeportivos(); // Llamar a la función para obtener los espacios
+                        },
+                        child: Text(
+                          "Reintentar",
+                          style: GoogleFonts.sansita(fontSize: 16),
+                        ),
+                      )
                     ],
                   ),
                 )
