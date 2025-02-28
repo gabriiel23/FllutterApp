@@ -86,19 +86,25 @@ class _HomeState extends State<Home> {
               ],
             ),
 
-            Text(
-              "CanchAPP",
-              style: GoogleFonts.sansita(
-                fontSize: 88,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                shadows: [
-                  const Shadow(
-                    offset: Offset(4.0, 4.0),
-                    blurRadius: 30.0,
-                    color: Color.fromARGB(255, 4, 189, 10),
+            SizedBox(
+              width: double.infinity, // Ocupa todo el ancho disponible
+              child: FittedBox(
+                fit: BoxFit.scaleDown, // Reduce el tamaño si es necesario
+                child: Text(
+                  "CanchAPP",
+                  style: GoogleFonts.sansita(
+                    fontSize: 88, // Tamaño base, se ajustará si es necesario
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      const Shadow(
+                        offset: Offset(4.0, 4.0),
+                        blurRadius: 30.0,
+                        color: Color.fromARGB(255, 4, 189, 10),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
 
@@ -149,24 +155,25 @@ class _HomeState extends State<Home> {
 
             const SizedBox(height: 40),
 
-            // Botones de selección de sección
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            // Botones de selección de sección
+            Wrap(
+              spacing: 10, // Espaciado horizontal entre botones
+              runSpacing:
+                  10, // Espaciado vertical si los botones se ajustan a la siguiente línea
+              alignment: WrapAlignment.center, // Centra los botones
               children: [
                 _buildCategoryButton("Noticias"),
-                SizedBox(width: 20),
                 _buildCategoryButton("Eventos"),
-                SizedBox(width: 20),
-                _buildCategoryButton("Reseñas"),
+                _buildCategoryButton("Reseñas"),
               ],
             ),
 
             const SizedBox(height: 20),
 
-            // Contenido dinámico
+// Contenido dinámico
             if (_selectedSection == "Noticias") _buildNoticias(),
             if (_selectedSection == "Eventos") _buildEventos(),
-            if (_selectedSection == "Reseñas") _buildResenias(),
+            if (_selectedSection == "Reseñas") _buildResenias(),
           ],
         ),
       ),
