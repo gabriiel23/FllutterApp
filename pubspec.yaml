@@ -50,6 +50,6 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icono/transparente.png"  # Ruta de tu icono
-  adaptive_icon_background: "#ffffff"  # Solo para Android (color de fondo)
-  adaptive_icon_foreground: "assets/icono/transparente.png"  # Solo para Android
+  image_path: "assets/icono/logoNormal.png"  # Ruta de tu icono
+  adaptive_icon_background: "#000000"  # Solo para Android (color de fondo)
+  adaptive_icon_foreground: "assets/icono/logoNormal.png"  # Solo para Android

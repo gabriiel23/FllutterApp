@@ -8,11 +8,10 @@
 
     <application
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:allowBackup="true"
         android:theme="@style/LaunchTheme"
-        android:label="flutterapp"
-        android:name=".MyApplication">  <!-- Cambia si tienes una clase de aplicación personalizada -->
+        android:label="CanchApp"> 
 
         <activity
             android:name=".MainActivity"
