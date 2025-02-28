@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/core/routes/routes.dart';
 import 'package:flutterapp/services/auth_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -65,6 +67,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Hero(
+                    tag: 'logo',
+                    child: Icon(Icons.sports_soccer, size: 100, color: Colors.white),
+                  ),
+                  SizedBox(height: 20),
                   const Text(
                     'Regístrate',
                     style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: Colors.white),
@@ -87,6 +94,28 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ),
                     child: const Text('Registrarse', style: TextStyle(fontSize: 18, color: Colors.white)),
                   ),
+                  SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '¿Ya tienes una cuenta?  ',
+                          style: GoogleFonts.sansita(
+                            color: Colors.white,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        Text(
+                          'Inicia Sesión',
+                          style: GoogleFonts.sansita(color: Colors.blue),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

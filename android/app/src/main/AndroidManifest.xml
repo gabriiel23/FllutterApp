@@ -1,14 +1,18 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.flutterapp">
 
     <!-- Permisos de geolocalización -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/> <!-- Mover aquí -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/> <!-- Si es necesario -->
 
     <application
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:allowBackup="true"
+        android:theme="@style/LaunchTheme"
         android:label="flutterapp"
-        android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:name=".MyApplication">  <!-- Cambia si tienes una clase de aplicación personalizada -->
 
         <activity
             android:name=".MainActivity"

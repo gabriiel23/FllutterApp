@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     'Inicia Sesión',
                     style: GoogleFonts.sansita(
-                      fontSize: 28,
+                      fontSize: 50,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
