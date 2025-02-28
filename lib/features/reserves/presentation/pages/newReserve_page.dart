@@ -16,6 +16,7 @@ class _NewReservePageState extends State<NewReservePage> {
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   String? _servicioId;
+  String? _espacioId;
   List<TimeOfDay> allHours = [];
   Map<DateTime, List<TimeOfDay>> bookedHours = {};
 
@@ -27,19 +28,21 @@ class _NewReservePageState extends State<NewReservePage> {
     });
   }
 
-  Future<void> _loadServicioId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _servicioId = prefs.getString('servicio_id');
-    });
-    print("ID del servicio en NewReservePage: $_servicioId");
-  }
+Future<void> _loadServicioId() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  setState(() {
+    _servicioId = prefs.getString('servicio_id');
+    _espacioId = prefs.getString('espacio_id'); // Cargar el ID del espacio
+  });
+  print("ID del servicio en NewReservePage: $_servicioId");
+  print("ID del espacio en NewReservePage: $_espacioId");
+}
 
 Future<void> _fetchAvailableHours() async {
   if (_servicioId == null) return;
 
   var response = await http.get(
-    Uri.parse("https://back-canchapp.onrender.com/api/$_servicioId/horarios"),
+    Uri.parse("http://localhost:3000/api/$_servicioId/horarios"),
     headers: {"Content-Type": "application/json"},
   );
 
@@ -81,7 +84,7 @@ Future<void> _fetchAvailableHours() async {
     if (_servicioId == null) return;
 
     var response = await http.get(
-      Uri.parse("https://back-canchapp.onrender.com/api/reservas/servicio/$_servicioId"),
+      Uri.parse("http://localhost:3000/api/reservas/servicio/$_servicioId"),
       headers: {"Content-Type": "application/json"},
     );
 
@@ -106,54 +109,54 @@ Future<void> _fetchAvailableHours() async {
     }
   }
 
-  Future<void> _confirmarReserva() async {
-    if (_selectedDate == null || _selectedTime == null || _servicioId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Falta seleccionar fecha y hora.")),
-      );
-      return;
-    }
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? usuarioId = prefs.getString('userId');
-
-    if (usuarioId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("No se ha encontrado el ID del usuario.")),
-      );
-      return;
-    }
-
-    String formattedDate =
-        "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}";
-    String formattedTime =
-        "${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}";
-
-    Map<String, String> reservaData = {
-      "usuario": usuarioId,
-      "servicio": _servicioId!,
-      "fecha": formattedDate,
-      "hora": formattedTime,
-      "estado": "Pendiente",
-    };
-
-    var response = await http.post(
-      Uri.parse("https://back-canchapp.onrender.com/api/reservas/crear"),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(reservaData),
+Future<void> _confirmarReserva() async {
+  if (_selectedDate == null || _selectedTime == null || _servicioId == null || _espacioId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Falta seleccionar fecha, hora o espacio.")),
     );
-
-    if (response.statusCode == 201) {
-      print("Reserva confirmada: ${response.body}");
-      Navigator.pushNamed(context, Routes.payment);
-    } else {
-      print("Error al reservar: ${response.body}");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error al hacer la reserva.")),
-      );
-    }
+    return;
   }
 
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? usuarioId = prefs.getString('userId');
+
+  if (usuarioId == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("No se ha encontrado el ID del usuario.")),
+    );
+    return;
+  }
+
+  String formattedDate =
+      "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}";
+  String formattedTime =
+      "${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}";
+
+  Map<String, String> reservaData = {
+    "usuario": usuarioId,
+    "servicio": _servicioId!,
+    "espacio": _espacioId!, // Agregar el ID del espacio
+    "fecha": formattedDate,
+    "hora": formattedTime,
+    "estado": "Pendiente",
+  };
+
+  var response = await http.post(
+    Uri.parse("http://localhost:3000/api/reservas/crear"),
+    headers: {"Content-Type": "application/json"},
+    body: jsonEncode(reservaData),
+  );
+
+  if (response.statusCode == 201) {
+    print("Reserva confirmada: ${response.body}");
+    Navigator.pushNamed(context, Routes.payment);
+  } else {
+    print("Error al reservar: ${response.body}");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error al hacer la reserva.")),
+    );
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
