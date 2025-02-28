@@ -16,14 +16,66 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
   DateTime _focusedDay = normalizeDate(DateTime.now());
   CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
   String? espacioId;
-  List<Reserva> todasLasReservas = []; // Almacena todas las reservas
-  bool isLoading = true; // Para manejar el estado de carga
+  String? nombreUsuario;
+  List<Reserva> todasLasReservas = [];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     initializeDateFormatting('es_ES', null);
     _cargarEspacioId();
+    _cargarNombreUsuario(); // Cargar el nombre del usuario
+  }
+
+  Future<void> _cargarNombreUsuario() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId'); // Obtener el userId
+    String? token = prefs.getString('userToken'); // Obtener el token
+
+    if (userId != null && token != null) {
+      try {
+        String nombre = await obtenerNombreUsuario(userId, token); // Obtener el nombre del usuario
+        setState(() {
+          nombreUsuario = nombre; // Actualizar el estado con el nombre del usuario
+        });
+        await prefs.setString('nombre_usuario', nombre); // Guardar el nombre en SharedPreferences
+      } catch (e) {
+        print("Error al cargar el nombre del usuario: $e");
+        setState(() {
+          nombreUsuario = 'Usuario'; // Valor predeterminado en caso de error
+        });
+      }
+    } else {
+      setState(() {
+        nombreUsuario = 'Usuario'; // Valor predeterminado si no hay userId o token
+      });
+    }
+  }
+
+  Future<String> obtenerNombreUsuario(String userId, String token) async {
+    final String url = 'https://back-canchapp.onrender.com/api/usuario/$userId'; // Endpoint para obtener el usuario por ID
+    print("Obteniendo nombre del usuario desde: $url"); // Depuración
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {'Authorization': 'Bearer $token'}, // Enviar el token en el header
+      );
+
+      print("Código de respuesta: ${response.statusCode}"); // Depuración
+      print("Respuesta: ${response.body}"); // Depuración
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        return responseData['nombre']; // Ajusta según la estructura de la respuesta
+      } else {
+        throw Exception("Error al obtener el nombre del usuario: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error de conexión: $e"); // Depuración
+      throw Exception("Error de conexión: $e");
+    }
   }
 
   Future<void> _cargarEspacioId() async {
@@ -39,33 +91,32 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
 
   Future<void> obtenerTodasLasReservas() async {
     final String url = 'https://back-canchapp.onrender.com/api/reservas/espacio/$espacioId';
-    print("Obteniendo todas las reservas desde: $url"); // <-- Depuración
+    print("Obteniendo todas las reservas desde: $url");
 
     try {
       final response = await http.get(Uri.parse(url));
 
-      print("Código de respuesta: ${response.statusCode}"); // <-- Depuración
-      print("Respuesta: ${response.body}"); // <-- Depuración
+      print("Código de respuesta: ${response.statusCode}");
+      print("Respuesta: ${response.body}");
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         setState(() {
           todasLasReservas = data.map((json) => Reserva.fromJson(json)).toList();
-          isLoading = false; // Datos cargados
+          isLoading = false;
         });
       } else {
         throw Exception("Error al obtener reservas: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error de conexión: $e"); // <-- Depuración
+      print("Error de conexión: $e");
       setState(() {
-        isLoading = false; // Error, pero detenemos la carga
+        isLoading = false;
       });
       throw Exception("Error de conexión: $e");
     }
   }
 
-  // Función para filtrar reservas por fecha
   List<Reserva> filtrarReservasPorFecha(DateTime fecha) {
     return todasLasReservas.where((reserva) {
       return isSameDay(normalizeDate(DateTime.parse(reserva.fecha)), fecha);
@@ -145,7 +196,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                                 ),
                                 const SizedBox(height: 10),
                                 Text(
-                                  "Hola [nombre]",
+                                  "Hola ${nombreUsuario ?? 'Usuario'}", // Muestra el nombre del usuario o 'Usuario' si no está disponible
                                   style: GoogleFonts.sansita(
                                     fontSize: 38,
                                     fontWeight: FontWeight.bold,
@@ -344,7 +395,7 @@ class Reserva {
   factory Reserva.fromJson(Map<String, dynamic> json) {
     return Reserva(
       id: json["_id"],
-      servicio: json["servicio"]["nombre"], // Asegúrate de que el JSON contiene el nombre del servicio
+      servicio: json["servicio"]["nombre"],
       fecha: json["fecha"],
       hora: json["hora"],
       estado: json["estado"],
