@@ -10,7 +10,6 @@ class DetalleEspacioDeportivoPage extends StatefulWidget {
   final Map<String, dynamic> espacio;
 
   DetalleEspacioDeportivoPage({required this.espacio});
-  
 
   @override
   _DetalleEspacioDeportivoPageState createState() =>
@@ -37,8 +36,7 @@ class _DetalleEspacioDeportivoPageState
   }
 
   Future<void> _fetchServicios() async {
-    final response =
-        await http.get(Uri.parse('$baseUrl/api/$espacioId'));
+    final response = await http.get(Uri.parse('$baseUrl/api/$espacioId'));
 
     if (response.statusCode == 200) {
       setState(() {
@@ -62,9 +60,16 @@ class _DetalleEspacioDeportivoPageState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.espacio['nombre'] ?? "Detalles",
-            style: GoogleFonts.lato(fontSize: 20, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.green[700],
+        backgroundColor: const Color(0xFF19382F),
+        iconTheme: IconThemeData(color: Colors.white),
+        title: Text(
+          widget.espacio['nombre'] ?? "Detalles",
+          style: GoogleFonts.sansita(
+            fontSize: 24,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -78,21 +83,24 @@ class _DetalleEspacioDeportivoPageState
                         borderRadius: BorderRadius.circular(10),
                         child: Image.network(
                           imageUrl,
-                          height: 200,
-                          width: double.infinity,
+                          height: 250,
+                          width: 250,
                           fit: BoxFit.cover,
                         ),
                       ),
                     )
                   : Container(height: 200, color: Colors.grey[300]),
-              SizedBox(height: 20),
+              SizedBox(height: 30),
               _buildDetailRow("Ubicación:", widget.espacio['ubicacion']),
+              Divider(),
               _buildDetailRow("Descripción:", widget.espacio['descripcion']),
+              Divider(),
               _buildDetailRow(
                   "Propietario:", widget.espacio['propietario']?['nombre']),
+              Divider(),
               _buildDetailRow("Email del Propietario:",
                   widget.espacio['propietario']?['email']),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               isLoading
                   ? Center(child: CircularProgressIndicator())
                   : ListView.builder(
@@ -106,20 +114,48 @@ class _DetalleEspacioDeportivoPageState
                           margin: EdgeInsets.symmetric(vertical: 8),
                           child: ListTile(
                             title: Text(
-                                servicio['nombre'] ?? 'Servicio no disponible'),
-                            subtitle: Text(servicio['descripcion'] ??
-                                'Descripción no disponible'),
+                              servicio['nombre'] ?? 'Servicio no disponible',
+                              style: GoogleFonts.sansita(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            subtitle: Text(
+                              servicio['descripcion'] ??
+                                  'Descripción no disponible',
+                              style: GoogleFonts.sansita(
+                                fontSize: 14,
+                                color: Colors.black54,
+                              ),
+                            ),
                             trailing: ElevatedButton(
                               onPressed: () async {
                                 SharedPreferences prefs =
                                     await SharedPreferences.getInstance();
-                                await prefs.setString('servicio_id',
-                                    servicio['_id']); // Guardar ID del servicio
-                                    print("ID del servicio guardado: ${servicio['_id']}");
+                                await prefs.setString(
+                                    'servicio_id', servicio['_id']);
+                                print(
+                                    "ID del servicio guardado: ${servicio['_id']}");
 
                                 Navigator.pushNamed(context, '/newReserve');
                               },
-                              child: Text("Reservar"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Color(0xFF19382F), // Color de fondo
+                                foregroundColor:
+                                    Colors.white, // Color del texto
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      8), // Bordes redondeados
+                                ),
+                              ),
+                              child: Text(
+                                "Reservar",
+                                style: GoogleFonts.sansita(fontSize: 16),
+                              ),
                             ),
                           ),
                         );
@@ -127,7 +163,7 @@ class _DetalleEspacioDeportivoPageState
                     ),
               SizedBox(height: 20),
               Center(
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -136,9 +172,21 @@ class _DetalleEspacioDeportivoPageState
                       ),
                     );
                   },
-                  child: Text("Crear Servicio"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF19382F), // Color de fondo
+                    foregroundColor: Colors.white, // Color del texto e icono
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(10), // Bordes redondeados
+                    ),
+                  ),
+                  icon:
+                      Icon(Icons.add, color: Colors.white), // Ícono de "Nuevo"
+                  label: Text("Crear Servicio",
+                      style: GoogleFonts.sansita(fontSize: 16)),
                 ),
-              ),
+              )
             ],
           ),
         ),
@@ -151,8 +199,11 @@ class _DetalleEspacioDeportivoPageState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: GoogleFonts.lato(fontSize: 18, fontWeight: FontWeight.bold)),
-        Text(value ?? "No disponible", style: GoogleFonts.lato(fontSize: 16)),
+            style:
+                GoogleFonts.sansita(fontSize: 18, fontWeight: FontWeight.bold)),
+        SizedBox(height: 4),
+        Text(value ?? "No disponible",
+            style: GoogleFonts.sansita(fontSize: 16)),
         SizedBox(height: 10),
       ],
     );
