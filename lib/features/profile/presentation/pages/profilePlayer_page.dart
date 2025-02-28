@@ -22,7 +22,7 @@ class _ProfilePlayerPageState extends State<ProfilePlayerPage> {
     'Reflejos': 5,
   };
 
-  final String apiUrl = "http://localhost:3000/api/jugadores"; // Cambia según tu backend
+  final String apiUrl = "https://back-canchapp.onrender.com/api/jugadores"; // Cambia según tu backend
 
   Future<void> saveProfile() async {
     if (selectedRole == null) return;

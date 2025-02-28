@@ -4,7 +4,7 @@ import 'package:jwt_decoder/jwt_decoder.dart'; // Agrega esta librería en tu pu
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  final String baseUrl = 'http://localhost:3000/api'; // Cambia esto por tu URL real
+  final String baseUrl = 'https://back-canchapp.onrender.com/api'; // Cambia esto por tu URL real
 
   Future<Map<String, dynamic>> registerUser(String nombre, String email, String password, String rol) async {
     final response = await http.post(

@@ -14,8 +14,8 @@ class _NewGroupPageState extends State<NewGroupPage> {
   final List<String> _players = [];
   List<Map<String, String>> _allPlayers = []; // Lista de jugadores con ID y nombre
 
-  final String apiUrl = "http://localhost:3000/api/grupo"; // API de grupos
-  final String playersApiUrl = "http://localhost:3000/api/usuarios"; // API de jugadores
+  final String apiUrl = "https://back-canchapp.onrender.com/api/grupo"; // API de grupos
+  final String playersApiUrl = "https://back-canchapp.onrender.com/api/usuarios"; // API de jugadores
 
   @override
   void initState() {

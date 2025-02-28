@@ -45,7 +45,7 @@ Future<void> crearEspacioDeportivo() async {
   }
 
   var request = http.MultipartRequest(
-      'POST', Uri.parse('http://localhost:3000/api/espacio-deportivo'));
+      'POST', Uri.parse('https://back-canchapp.onrender.com/api/espacio-deportivo'));
 
   request.fields['nombre'] = nombre;
   request.fields['ubicacion'] = ubicacion;

@@ -4,11 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'crear_servicio_page.dart';
+import 'package:flutterapp/config.dart';
 
 class DetalleEspacioDeportivoPage extends StatefulWidget {
   final Map<String, dynamic> espacio;
 
   DetalleEspacioDeportivoPage({required this.espacio});
+  
 
   @override
   _DetalleEspacioDeportivoPageState createState() =>
@@ -20,6 +22,7 @@ class _DetalleEspacioDeportivoPageState
   late String espacioId;
   List<dynamic> servicios = [];
   bool isLoading = true;
+  String baseUrl = Config.baseUrl;
 
   @override
   void initState() {
@@ -35,7 +38,7 @@ class _DetalleEspacioDeportivoPageState
 
   Future<void> _fetchServicios() async {
     final response =
-        await http.get(Uri.parse('http://localhost:3000/api/$espacioId'));
+        await http.get(Uri.parse('$baseUrl/api/$espacioId'));
 
     if (response.statusCode == 200) {
       setState(() {
@@ -52,7 +55,7 @@ class _DetalleEspacioDeportivoPageState
 
   @override
   Widget build(BuildContext context) {
-    String baseUrl = 'http://localhost:3000';
+    String baseUrl = Config.baseUrl;
     String imageUrl = widget.espacio['imagen'] != null
         ? '$baseUrl${widget.espacio['imagen']}'
         : '';

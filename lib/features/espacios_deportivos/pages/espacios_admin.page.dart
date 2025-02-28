@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart'; // Importamos SharedPreferences
 import 'detalle_espacio_deportivo.dart'; // Importamos la pantalla de detalle
 import 'package:flutterapp/core/routes/routes.dart';// Asegúrate de importar el archivo donde defines Routes
+import 'package:flutterapp/config.dart';
 
 class ListaEspaciosAdminDeportivosPage extends StatefulWidget {
   @override
@@ -17,7 +18,8 @@ class _ListaEspaciosDeportivosPageState
   List<dynamic> espacios = [];
   bool isLoading = true;
   bool hasError = false;
-  String baseUrl = 'http://localhost:3000';
+   String baseUrl = Config.baseUrl;
+
 
   @override
   void initState() {

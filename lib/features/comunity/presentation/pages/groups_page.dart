@@ -122,7 +122,7 @@ class GroupsTab extends StatefulWidget {
 
 class _GroupsTabState extends State<GroupsTab> {
   Future<List<dynamic>> fetchGroups() async {
-    final response = await http.get(Uri.parse('http://localhost:3000/api/grupos'));
+    final response = await http.get(Uri.parse('https://back-canchapp.onrender.com/api/grupos'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
