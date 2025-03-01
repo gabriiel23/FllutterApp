@@ -6,10 +6,10 @@ import 'package:flutterapp/core/routes/navegation/navigationBar.dart';
 import 'package:flutterapp/features/canchas/presentation/pages/newCancha_page.dart';
 
 
-import 'package:flutterapp/features/canchas/presentation/pages/newCancha_page.dart';
+// import 'package:flutterapp/features/canchas/presentation/pages/newCancha_page.dart';
 import 'package:flutterapp/features/comunity/presentation/pages/groups_page.dart';
 import 'package:flutterapp/features/home/presentation/pages/home_page.dart';
-import 'package:flutterapp/features/canchas/presentation/pages/canchas_page.dart';
+// import 'package:flutterapp/features/canchas/presentation/pages/canchas_page.dart';
 import 'package:flutterapp/features/profile/presentation/pages/profilePlayer_page.dart';
 import 'package:flutterapp/features/reserves/presentation/pages/reserves_page.dart';
 import 'package:flutterapp/features/reserves/presentation/pages/reserves_jugador.dart';

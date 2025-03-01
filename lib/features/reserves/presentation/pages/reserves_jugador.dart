@@ -119,57 +119,68 @@ class _ReservesState extends State<Reserves_user> {
                       padding: const EdgeInsets.all(12),
                       margin: const EdgeInsets.only(bottom: 16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE5F7E9),
-                        borderRadius: BorderRadius.circular(8),
+                        color: const Color(0xFF19382F),
+                        borderRadius: BorderRadius.circular(22),
                         border: Border.all(color: const Color(0xFF19382F)),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Espacio Deportivo: ${reserva.espacioDeportivo}", // Mostrar el nombre del espacio
+                            "ESPACIO: ${reserva.espacioDeportivo}", // Mostrar el nombre del espacio
                             style: GoogleFonts.sansita(
-                              color: const Color(0xFF19382F),
-                              fontSize: 16,
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Divider(),
+                          Text(
+                            "FECHA: ${reserva.fecha} - Hora: ${reserva.hora}",
+                            style: GoogleFonts.sansita(
+                              color: Colors.grey.shade300,
+                              fontSize: 17,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            "Fecha: ${reserva.fecha} - Hora: ${reserva.hora}",
+                            "SERVICIO: ${reserva.servicio}",
                             style: GoogleFonts.sansita(
-                              color: const Color(0xFF19382F),
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            "Servicio: ${reserva.servicio}",
-                            style: GoogleFonts.sansita(
-                              color: const Color(0xFF19382F),
+                              color: Colors.grey.shade300,
                               fontSize: 16,
                             ),
                           ),
                           Text(
-                            "Estado: ${reserva.estado}",
+                            "ESTADO: ${reserva.estado}",
                             style: GoogleFonts.sansita(
                               color: reserva.estado == "Confirmada"
                                   ? Colors.green
                                   : reserva.estado == "Cancelada"
                                       ? Colors.red
-                                      : Colors.black,
+                                      : Colors.orange,
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          ElevatedButton(
-                            onPressed: () {
-                              cambiarEstadoReserva(reserva.id);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                            ),
-                            child: const Text("Cancelar"),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .end, // Alinea el botón a la derecha
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  cambiarEstadoReserva(reserva.id);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                ),
+                                child: Text(
+                                  "Cancelar",
+                                  style: GoogleFonts.sansita(
+                                      fontSize: 16, color: Colors.white),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

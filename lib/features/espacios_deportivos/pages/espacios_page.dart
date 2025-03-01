@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'detalle_espacio_deportivo.dart';
-import 'package:flutterapp/core/routes/routes.dart';
+// import 'package:flutterapp/core/routes/routes.dart';
 import 'package:flutterapp/config.dart';
 
 class ListaEspaciosDeportivosPage extends StatefulWidget {

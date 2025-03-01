@@ -66,9 +66,72 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  Widget _buildDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(color: Colors.green),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.sports_soccer, size: 50, color: Colors.white),
+                SizedBox(height: 10),
+                Text(
+                  'CanchAPP Admin',
+                  style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.dashboard),
+            title: Text('Panel de Control'),
+            onTap: () {
+              setState(() {
+                _currentIndex = 0;
+              });
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.sports_soccer),
+            title: Text('Espacios Deportivos'),
+            onTap: () {
+              setState(() {
+                _currentIndex = 2;
+              });
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.history),
+            title: Text('Reservas'),
+            onTap: () {
+              setState(() {
+                _currentIndex = 3;
+              });
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Cerrar Sesión'),
+            onTap: () {
+              // Aquí puedes agregar la funcionalidad para cerrar sesión
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: _userRol == 'dueño' ? _buildDrawer() : null, // Drawer solo para dueños
       body: IndexedStack(
         index: _currentIndex,
         children: _buildPages(),

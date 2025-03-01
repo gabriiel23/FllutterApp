@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/core/routes/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -35,11 +36,14 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
 
     if (userId != null && token != null) {
       try {
-        String nombre = await obtenerNombreUsuario(userId, token); // Obtener el nombre del usuario
+        String nombre = await obtenerNombreUsuario(
+            userId, token); // Obtener el nombre del usuario
         setState(() {
-          nombreUsuario = nombre; // Actualizar el estado con el nombre del usuario
+          nombreUsuario =
+              nombre; // Actualizar el estado con el nombre del usuario
         });
-        await prefs.setString('nombre_usuario', nombre); // Guardar el nombre en SharedPreferences
+        await prefs.setString(
+            'nombre_usuario', nombre); // Guardar el nombre en SharedPreferences
       } catch (e) {
         print("Error al cargar el nombre del usuario: $e");
         setState(() {
@@ -48,19 +52,23 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
       }
     } else {
       setState(() {
-        nombreUsuario = 'Usuario'; // Valor predeterminado si no hay userId o token
+        nombreUsuario =
+            'Usuario'; // Valor predeterminado si no hay userId o token
       });
     }
   }
 
   Future<String> obtenerNombreUsuario(String userId, String token) async {
-    final String url = 'https://back-canchapp.onrender.com/api/usuario/$userId'; // Endpoint para obtener el usuario por ID
+    final String url =
+        'https://back-canchapp.onrender.com/api/usuario/$userId'; // Endpoint para obtener el usuario por ID
     print("Obteniendo nombre del usuario desde: $url"); // Depuración
 
     try {
       final response = await http.get(
         Uri.parse(url),
-        headers: {'Authorization': 'Bearer $token'}, // Enviar el token en el header
+        headers: {
+          'Authorization': 'Bearer $token'
+        }, // Enviar el token en el header
       );
 
       print("Código de respuesta: ${response.statusCode}"); // Depuración
@@ -68,9 +76,11 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        return responseData['nombre']; // Ajusta según la estructura de la respuesta
+        return responseData[
+            'nombre']; // Ajusta según la estructura de la respuesta
       } else {
-        throw Exception("Error al obtener el nombre del usuario: ${response.statusCode}");
+        throw Exception(
+            "Error al obtener el nombre del usuario: ${response.statusCode}");
       }
     } catch (e) {
       print("Error de conexión: $e"); // Depuración
@@ -90,7 +100,8 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
   }
 
   Future<void> obtenerTodasLasReservas() async {
-    final String url = 'https://back-canchapp.onrender.com/api/reservas/espacio/$espacioId';
+    final String url =
+        'https://back-canchapp.onrender.com/api/reservas/espacio/$espacioId';
     print("Obteniendo todas las reservas desde: $url");
 
     try {
@@ -102,7 +113,8 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         setState(() {
-          todasLasReservas = data.map((json) => Reserva.fromJson(json)).toList();
+          todasLasReservas =
+              data.map((json) => Reserva.fromJson(json)).toList();
           isLoading = false;
         });
       } else {
@@ -130,7 +142,8 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
   @override
   Widget build(BuildContext context) {
     DateTime normalizedSelectedDay = normalizeDate(_selectedDay);
-    List<Reserva> reservasDelDia = filtrarReservasPorFecha(normalizedSelectedDay);
+    List<Reserva> reservasDelDia =
+        filtrarReservasPorFecha(normalizedSelectedDay);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -139,8 +152,8 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                const Color(0xFF19382F),
-                const Color.fromARGB(255, 38, 94, 78),
+                Color(0xFF19382F),
+                Color.fromARGB(255, 38, 94, 78),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -148,11 +161,43 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
-            leading: IconButton(
-              icon: Icon(Icons.menu, color: Colors.white),
-              onPressed: () {
-                // Acción del menú
+            leading: PopupMenuButton<String>(
+              onSelected: (String value) {
+                switch (value) {
+                  case 'Login':
+                    Navigator.pushNamed(context, Routes.login);
+                    break;
+                  case 'Registro':
+                    Navigator.pushNamed(context, Routes.registration);
+                    break;
+                  case 'Configuración':
+                    Navigator.pushNamed(context, Routes.settings);
+                    break;
+                  case 'Cerrar sesión':
+                    Navigator.pushReplacementNamed(context, Routes.logout);
+                    break;
+                }
               },
+              itemBuilder: (BuildContext context) {
+                return ['Login', 'Registro', 'Configuración', 'Cerrar sesión']
+                    .map((String choice) {
+                  return PopupMenuItem<String>(
+                    value: choice,
+                    child: Text(
+                      choice,
+                      style: GoogleFonts.sansita(),
+                    ),
+                  );
+                }).toList();
+              },
+              icon: Container(
+                decoration: BoxDecoration(),
+                padding: EdgeInsets.all(8),
+                child: const Icon(
+                  Icons.menu_open_rounded,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ),
@@ -160,7 +205,7 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverAppBar(
-            expandedHeight: 260,
+            expandedHeight: 300,
             pinned: false,
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
@@ -174,66 +219,77 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                     end: Alignment.bottomRight,
                   ),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 30),
-                      Row(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "⚽  CanchAPP",
-                                  style: GoogleFonts.sansita(
-                                    fontSize: 22,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  "Hola ${nombreUsuario ?? 'Usuario'}", // Muestra el nombre del usuario o 'Usuario' si no está disponible
-                                  style: GoogleFonts.sansita(
-                                    fontSize: 38,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    shadows: [
-                                      const Shadow(
-                                        offset: Offset(5.0, 5.0),
-                                        blurRadius: 8.0,
-                                        color: Colors.black,
+                          const SizedBox(height: 30),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "⚽  CanchAPP",
+                                      style: GoogleFonts.sansita(
+                                        fontSize: 22,
+                                        color: Colors.white,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      "Hola ${nombreUsuario ?? 'Usuario'}",
+                                      style: GoogleFonts.sansita(
+                                        fontSize: constraints.maxWidth < 350
+                                            ? 30
+                                            : 38, // Ajusta el tamaño dinámicamente
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        shadows: [
+                                          const Shadow(
+                                            offset: Offset(5.0, 5.0),
+                                            blurRadius: 8.0,
+                                            color: Colors.black,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      "Aquí podrás ver todas las novedades sobre tu espacio deportivo",
+                                      style: GoogleFonts.sansita(
+                                        fontSize: 16,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  "Aquí podrás ver todas las novedades sobre tu espacio deportivo",
-                                  style: GoogleFonts.sansita(
-                                    fontSize: 16,
-                                    color: Colors.white70,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            flex: 2,
-                            child: Image.network(
-                              'https://cdn-icons-png.flaticon.com/512/78/78948.png',
-                              height: 150,
-                              fit: BoxFit.contain,
-                            ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                flex: 2,
+                                child: constraints.maxWidth > 300
+                                    ? Image.network(
+                                        'https://cdn-icons-png.flaticon.com/512/78/78948.png',
+                                        height: constraints.maxWidth < 350
+                                            ? 100
+                                            : 150, // Ajusta la altura de la imagen
+                                        fit: BoxFit.contain,
+                                      )
+                                    : Container(), // Oculta la imagen en pantallas extremadamente pequeñas
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -279,10 +335,12 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                 },
                 locale: 'es_ES',
                 headerStyle: HeaderStyle(
-                  titleTextStyle: GoogleFonts.sansita(fontSize: 20.0, color: Colors.black),
+                  titleTextStyle:
+                      GoogleFonts.sansita(fontSize: 20.0, color: Colors.black),
                   formatButtonVisible: false,
                   leftChevronIcon: Icon(Icons.arrow_back, color: Colors.green),
-                  rightChevronIcon: Icon(Icons.arrow_forward, color: Colors.green),
+                  rightChevronIcon:
+                      Icon(Icons.arrow_forward, color: Colors.green),
                 ),
                 calendarStyle: CalendarStyle(
                   defaultTextStyle: GoogleFonts.sansita(),
@@ -298,7 +356,8 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                     shape: BoxShape.circle,
                   ),
                   outsideTextStyle: GoogleFonts.sansita(color: Colors.grey),
-                  disabledTextStyle: GoogleFonts.sansita(color: Colors.grey[400]),
+                  disabledTextStyle:
+                      GoogleFonts.sansita(color: Colors.grey[400]),
                 ),
               ),
               const SizedBox(height: 10),
@@ -321,11 +380,16 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
                 )
               else
                 Column(
-                  children: reservasDelDia.map((reserva) => ListTile(
-                    leading: Icon(Icons.sports_soccer, color: Colors.green),
-                    title: Text(reserva.servicio, style: GoogleFonts.sansita()),
-                    subtitle: Text("Hora: ${reserva.hora}", style: GoogleFonts.sansita()),
-                  )).toList(),
+                  children: reservasDelDia
+                      .map((reserva) => ListTile(
+                            leading:
+                                Icon(Icons.sports_soccer, color: Colors.green),
+                            title: Text(reserva.servicio,
+                                style: GoogleFonts.sansita()),
+                            subtitle: Text("Hora: ${reserva.hora}",
+                                style: GoogleFonts.sansita()),
+                          ))
+                      .toList(),
                 ),
               const SizedBox(height: 20),
               const Divider(),

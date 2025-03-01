@@ -138,7 +138,7 @@ class _PlayersTabState extends State<PlayersTab> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8)),
                   ),
-                  child: const Text("Desafiar", style: TextStyle(color: Colors.white)),
+                  child: Text("Desafiar", style: GoogleFonts.sansita(fontSize: 16, color: Colors.white)),
                 ),
               ),
             );

@@ -101,8 +101,7 @@ class _CanchasState extends State<Canchas> {
       itemBuilder: (context, index) {
         final local = _locales[index];
         final double rating = (local['calificacion'] ?? 0).toDouble();
-        final List<String> servicios = local['servicios'] ?? [];
-
+        
         String imageUrl = "${baseUrl}uploads/${local['imagenes'][0].split('\\').last}";
 
         return Card(
