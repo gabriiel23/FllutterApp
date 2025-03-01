@@ -131,7 +131,7 @@ class _Payment extends State<PaymentPage> {
                 ),
                 child: Text(
                   "Seleccionar imagen",
-                  style: GoogleFonts.sansita(color: Colors.white),
+                  style: GoogleFonts.sansita(color: Colors.black),
                 ),
               ),
               SizedBox(height: 20),
@@ -142,7 +142,7 @@ class _Payment extends State<PaymentPage> {
                 Image.file(_imageFile!, width: 200, height: 200),
               if (_imageBytes == null && _imageFile == null)
                 Text("No se ha seleccionado ninguna imagen",
-                    style: GoogleFonts.sansita(color: Colors.grey)),
+                    style: GoogleFonts.sansita(color: Colors.grey.shade800)),
             ],
           ),
         ),
