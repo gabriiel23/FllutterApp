@@ -1,4 +1,8 @@
 // lib/config.dart
 class Config {
-  static const String baseUrl = 'https://back-canchapp.onrender.com';
+  // empresa
+  // static const String baseUrl = 'http://192.168.101.36:3000';
+
+  // casa
+  static const String baseUrl = 'http://192.168.1.92:3000';
 }

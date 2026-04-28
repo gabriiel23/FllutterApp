@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutterapp/config.dart';
 
 class NewCanchaPage extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
       return;
     }
 
-    var url = Uri.parse('http://localhost:3000/api/canchas');
+    var url = Uri.parse('${Config.baseUrl}/api/canchas');
 
     Map<String, dynamic> canchaData = {
       "nombre": _canchaNameController.text,
@@ -196,7 +197,7 @@ class _NewCanchaPageState extends State<NewCanchaPage> {
             fillColor: Color(0xFF2A5B4E),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
           ),
-          value: _selectedTipoServicio,
+          initialValue: _selectedTipoServicio,
           items: options.map((String option) {
             return DropdownMenuItem<String>(
               value: option,

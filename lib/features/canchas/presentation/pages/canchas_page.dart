@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:shared_preferences/shared_preferences.dart'; // Importar SharedPreferences
+import 'package:flutterapp/config.dart';
 
 
 class Canchas extends StatefulWidget {
@@ -19,8 +20,8 @@ class _CanchasState extends State<Canchas> {
   List<Map<String, dynamic>> _locales = [];
   bool _isLoading = true;
   String _userRole = ""; // Variable para almacenar el rol del usuario
-  final String apiUrl = "http://localhost:3000/api/canchas";
-  String baseUrl = "http://localhost:3000/";
+  final String apiUrl = '${Config.baseUrl}/api/canchas';
+  String baseUrl = '${Config.baseUrl}/';
 
   @override
   void initState() {
@@ -81,8 +82,8 @@ class _CanchasState extends State<Canchas> {
                 : _buildCanchasList(),
       ),
       
-      // Mostrar el botón solo si el usuario es "dueño"
-      floatingActionButton: _userRole == "dueño"
+      // Mostrar el botón solo si el usuario es "administrador" o "superadmin"
+      floatingActionButton: (_userRole == "administrador" || _userRole == "superadmin")
           ? FloatingActionButton(
               onPressed: () {
                 Navigator.pushNamed(context, Routes.newEspacioPage);
@@ -90,7 +91,7 @@ class _CanchasState extends State<Canchas> {
               backgroundColor: const Color(0xFF19382F),
               child: const Icon(Icons.add, color: Colors.white),
             )
-          : null, // Si no es dueño, el botón no se muestra
+          : null, // Si no es administrador, el botón no se muestra
     );
   }
 

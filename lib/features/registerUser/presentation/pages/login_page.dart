@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       
       if (response.containsKey('token')) {
-        Navigator.pushNamed(context, Routes.home);
+        Navigator.pushReplacementNamed(context, Routes.home);
       } else {
         _showErrorDialog("Credenciales incorrectas");
       }

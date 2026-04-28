@@ -30,7 +30,12 @@ class Routes {
   static const payment = '/payment';
   static const newCanchaPage = '/newCancha';
   static const newEspacioPage = '/newEspacio';
+  static const editarEspacioPage = '/editarEspacio';
+  static const crearNoticiaPage = '/crearNoticia';
   static const profilePlayer = '/profilePlayer';
   static const homeAdmin = '/homeAdmin';
+  static const gestionarUsuarios = '/gestionarUsuarios';
+  static const groupDetail = '/groupDetail';
 }
+
 
